@@ -74,7 +74,7 @@ export function ModalDialog({
       ref={dialogRef}
       aria-labelledby={ariaLabelledBy}
       {...({ closedby: 'any' } as Record<string, string>)}
-      className={`m-auto w-[calc(100%-1.5rem)] ${maxWidthClass} rounded-2xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-2xl p-0 overflow-hidden`}
+      className={`m-auto w-[calc(100%-1.5rem)] ${maxWidthClass} rounded-xl bg-white dark:bg-[#121417] text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800 shadow-2xl p-0 overflow-hidden`}
     >
       {open ? children : null}
     </dialog>

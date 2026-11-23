@@ -66,12 +66,12 @@ export function CourseModal({
 
   return (
     <ModalDialog open={open} onClose={onClose} ariaLabelledBy={titleId} maxWidthClass="max-w-xl">
-      <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-800/60">
+      <div className="px-4 sm:px-5 py-3.5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/70 dark:bg-zinc-900/60">
         <div>
-          <h1 id={titleId} className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+          <h1 id={titleId} className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-zinc-100">
             Kelola Mata Kuliah
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
             Tambah, ubah nama/warna, atau hapus mata kuliah.
           </p>
         </div>
@@ -79,9 +79,9 @@ export function CourseModal({
           type="button"
           onClick={onClose}
           aria-label="Tutup dialog"
-          className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer"
+          className="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
       </div>
 

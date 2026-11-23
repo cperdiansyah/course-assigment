@@ -124,22 +124,22 @@ export function TaskModal({
 
   return (
     <ModalDialog open={open} onClose={onClose} ariaLabelledBy={titleId}>
-      <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-800/60">
+      <div className="px-4 sm:px-5 py-3.5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/70 dark:bg-zinc-900/60">
         <div className="min-w-0 pr-2">
-          <span className="inline-block px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 mb-1 truncate max-w-full">
-            {task ? selectedCourse?.name ?? 'Mata Kuliah' : 'Tugas Baru'}
-          </span>
-          <h1 id={titleId} className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate">
+          <h1 id={titleId} className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-zinc-100 truncate">
             {task ? `${task.name} (${task.session})` : 'Tambah Tugas ke Timeline'}
           </h1>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
+            {task ? selectedCourse?.name ?? 'Mata Kuliah' : 'Isi detail tugas baru'}
+          </p>
         </div>
         <button
           type="button"
           onClick={onClose}
           aria-label="Tutup dialog"
-          className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer shrink-0"
+          className="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer shrink-0"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
       </div>
 

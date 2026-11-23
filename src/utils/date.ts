@@ -106,41 +106,40 @@ export function assignLanes(courseTasks: Task[]): { packedTasks: PackedTask[]; l
 
 export function getCategoryStyle(category: TaskCategory, status: TaskStatus) {
   let base = {
-    bg: 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500',
-    border: 'border-blue-600 dark:border-blue-400/50',
-    text: 'text-white',
-    pill: 'bg-blue-700/60 dark:bg-blue-900/70',
-    badge: 'bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+    bar: 'bg-blue-500/10 hover:bg-blue-500/15 dark:bg-blue-400/12 dark:hover:bg-blue-400/20 border-blue-500/25 dark:border-blue-400/25 text-blue-950 dark:text-blue-100',
+    dot: 'bg-blue-600 dark:bg-blue-400',
+    meta: 'text-blue-700/80 dark:text-blue-300/80',
+    badge: 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20',
   };
 
   if (category.includes('Team') && !category.includes('LAB')) {
     base = {
-      bg: 'bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-500',
-      border: 'border-purple-600 dark:border-purple-400/50',
-      text: 'text-white',
-      pill: 'bg-purple-700/60 dark:bg-purple-900/70',
-      badge: 'bg-purple-50 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+      bar: 'bg-violet-500/10 hover:bg-violet-500/15 dark:bg-violet-400/12 dark:hover:bg-violet-400/20 border-violet-500/25 dark:border-violet-400/25 text-violet-950 dark:text-violet-100',
+      dot: 'bg-violet-600 dark:bg-violet-400',
+      meta: 'text-violet-700/80 dark:text-violet-300/80',
+      badge: 'bg-violet-500/10 text-violet-700 dark:text-violet-300 border-violet-500/20',
     };
   } else if (category.includes('Quiz')) {
     base = {
-      bg: 'bg-amber-500 hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-500',
-      border: 'border-amber-600 dark:border-amber-400/50',
-      text: 'text-white',
-      pill: 'bg-amber-700/60 dark:bg-amber-900/70',
-      badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+      bar: 'bg-amber-500/12 hover:bg-amber-500/18 dark:bg-amber-400/12 dark:hover:bg-amber-400/20 border-amber-500/30 dark:border-amber-400/25 text-amber-950 dark:text-amber-100',
+      dot: 'bg-amber-600 dark:bg-amber-400',
+      meta: 'text-amber-800/80 dark:text-amber-300/80',
+      badge: 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/25',
     };
   } else if (category.includes('LAB')) {
     base = {
-      bg: 'bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500',
-      border: 'border-emerald-600 dark:border-emerald-400/50',
-      text: 'text-white',
-      pill: 'bg-emerald-700/60 dark:bg-emerald-900/70',
-      badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+      bar: 'bg-emerald-500/10 hover:bg-emerald-500/15 dark:bg-emerald-400/12 dark:hover:bg-emerald-400/20 border-emerald-500/25 dark:border-emerald-400/25 text-emerald-950 dark:text-emerald-100',
+      dot: 'bg-emerald-600 dark:bg-emerald-400',
+      meta: 'text-emerald-700/80 dark:text-emerald-300/80',
+      badge: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20',
     };
   }
 
   if (status === 'Completed') {
-    base.bg += ' opacity-65 saturate-50';
+    base.bar =
+      'bg-zinc-100 hover:bg-zinc-200/70 dark:bg-zinc-800/50 dark:hover:bg-zinc-800/80 border-zinc-200 dark:border-zinc-700/70 text-zinc-500 dark:text-zinc-400';
+    base.dot = 'bg-zinc-400 dark:bg-zinc-500';
+    base.meta = 'text-zinc-400 dark:text-zinc-500';
   }
 
   return base;

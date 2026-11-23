@@ -1,3 +1,4 @@
+import { Check, CircleDot } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { COURSE_COLOR_STYLES } from '../data/seed';
 import { Course, Task } from '../types';
@@ -39,7 +40,7 @@ export function TimelineView({
 }: TimelineViewProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const cornerHeaderRef = useRef<HTMLDivElement>(null);
-  const [leftColWidth, setLeftColWidth] = useState<number>(288);
+  const [leftColWidth, setLeftColWidth] = useState<number>(260);
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
 
   const { minDate, maxDate } = useMemo(
@@ -75,7 +76,6 @@ export function TimelineView({
     return { days: daysArr, monthGroups: groups };
   }, [minDate, totalDays, today]);
 
-  // Measure sticky left column width accurately via ResizeObserver
   useEffect(() => {
     const el = cornerHeaderRef.current;
     if (!el) return;
@@ -86,7 +86,6 @@ export function TimelineView({
     return () => ro.disconnect();
   }, []);
 
-  // Scroll to today whenever scrollTrigger increments or on initial mount
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -97,7 +96,7 @@ export function TimelineView({
 
   const todayOffsetDays = (today.getTime() - minDate.getTime()) / MS_PER_DAY;
   const showTodayLine = todayOffsetDays >= 0 && todayOffsetDays <= totalDays;
-  const laneHeight = typeof window !== 'undefined' && window.innerWidth < 640 ? 44 : 46;
+  const laneHeight = typeof window !== 'undefined' && window.innerWidth < 640 ? 38 : 40;
 
   const handleMouseEnter = (e: React.MouseEvent, task: Task, courseName: string) => {
     if (window.matchMedia('(pointer: coarse)').matches) return;
@@ -114,39 +113,39 @@ export function TimelineView({
     setTooltip((prev) =>
       prev
         ? {
-            ...prev,
-            x: Math.min(window.innerWidth - 280, e.clientX + 14),
-            y: Math.min(window.innerHeight - 160, e.clientY + 14),
-          }
+          ...prev,
+          x: Math.min(window.innerWidth - 280, e.clientX + 14),
+          y: Math.min(window.innerHeight - 160, e.clientY + 14),
+        }
         : null,
     );
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex-1 flex flex-col overflow-hidden relative transition-colors">
-      {/* Legend Bar */}
-      <div className="px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-50/80 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs">
+    <div className="bg-white dark:bg-[#121417] border border-zinc-200 dark:border-zinc-800 rounded-xl flex-1 flex flex-col overflow-hidden relative">
+      {/* Compact Legend Bar */}
+      <div className="px-3 sm:px-4 py-2 bg-zinc-50/70 dark:bg-zinc-900/60 border-b border-zinc-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-600 dark:text-zinc-400">
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-          <span className="font-semibold text-slate-600 dark:text-slate-300">Kategori:</span>
+          <span className="font-medium text-zinc-500 dark:text-zinc-400">Kategori:</span>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-blue-500" />
-            <span className="text-slate-600 dark:text-slate-300">Personal</span>
+            <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400" />
+            <span>Personal</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-purple-500" />
-            <span className="text-slate-600 dark:text-slate-300">Team</span>
+            <span className="w-2 h-2 rounded-full bg-violet-600 dark:bg-violet-400" />
+            <span>Team</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-amber-500" />
-            <span className="text-slate-600 dark:text-slate-300">Quiz</span>
+            <span className="w-2 h-2 rounded-full bg-amber-600 dark:bg-amber-400" />
+            <span>Quiz</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-emerald-500" />
-            <span className="text-slate-600 dark:text-slate-300">LAB / Practicum</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400" />
+            <span>LAB / Practicum</span>
           </div>
         </div>
-        <div className="text-slate-400 dark:text-slate-500 italic hidden md:block">
-          Status otomatis mengikuti tanggal hari ini • Klik bar untuk detail/override manual
+        <div className="text-zinc-400 dark:text-zinc-500 hidden md:block">
+          Klik bar untuk detail atau ubah status manual
         </div>
       </div>
 
@@ -154,46 +153,41 @@ export function TimelineView({
       <div ref={scrollContainerRef} className="flex-1 overflow-auto relative select-none">
         <div className="relative min-w-max">
           {/* Sticky Timeline Header */}
-          <div className="sticky top-0 z-20 flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
+          <div className="sticky top-0 z-20 flex bg-white dark:bg-[#121417] border-b border-zinc-200 dark:border-zinc-800">
             <div
               ref={cornerHeaderRef}
-              className="sticky left-0 z-30 w-36 sm:w-56 md:w-72 shrink-0 bg-slate-50 dark:bg-slate-800/95 border-r border-slate-200 dark:border-slate-700 px-2.5 sm:px-4 py-3 flex items-center justify-between"
+              className="sticky left-0 z-30 w-36 sm:w-52 md:w-64 shrink-0 bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 px-3 sm:px-4 py-2.5 flex items-center justify-between"
             >
-              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-                Mata Kuliah
-              </span>
-              <span className="text-[10px] sm:text-[11px] font-medium text-slate-400 dark:text-slate-500 hidden sm:inline">
-                Progress
-              </span>
+              <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Mata kuliah</span>
+              <span className="text-[11px] text-zinc-400 dark:text-zinc-500 hidden sm:inline">Progres</span>
             </div>
 
             <div className="relative flex flex-col">
               <div
                 style={{ width: `${timelineWidth}px` }}
-                className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50 h-7"
+                className="flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/70 h-7"
               >
                 {monthGroups.map((mg) => (
                   <div
                     key={mg.label}
                     style={{ width: `${mg.count * dayWidth}px` }}
-                    className="shrink-0 border-r border-slate-200 dark:border-slate-700/80 px-2 sm:px-3 flex items-center text-[11px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate"
+                    className="shrink-0 border-r border-zinc-200 dark:border-zinc-800 px-2.5 flex items-center text-[11px] font-semibold text-zinc-700 dark:text-zinc-200 truncate"
                   >
                     {mg.label}
                   </div>
                 ))}
               </div>
-              <div style={{ width: `${timelineWidth}px` }} className="flex h-8 bg-white dark:bg-slate-900">
+              <div style={{ width: `${timelineWidth}px` }} className="flex h-7 bg-white dark:bg-[#121417]">
                 {days.map((d, idx) => (
                   <div
                     key={idx}
                     style={{ width: `${dayWidth}px` }}
-                    className={`shrink-0 border-r border-slate-100 dark:border-slate-800/80 flex flex-col items-center justify-center text-[10px] sm:text-[11px] font-medium ${
-                      d.isToday
-                        ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 font-bold'
-                        : d.isWeekend
-                          ? 'bg-slate-50/90 dark:bg-slate-800/40 text-slate-400 dark:text-slate-500'
-                          : 'text-slate-600 dark:text-slate-400'
-                    }`}
+                    className={`shrink-0 border-r border-zinc-100 dark:border-zinc-800/70 flex items-center justify-center text-[11px] tabular-nums ${d.isToday
+                      ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 font-semibold'
+                      : d.isWeekend
+                        ? 'bg-zinc-50/80 dark:bg-zinc-900/40 text-zinc-400 dark:text-zinc-500'
+                        : 'text-zinc-500 dark:text-zinc-400'
+                      }`}
                   >
                     {d.date.getDate()}
                   </div>
@@ -203,7 +197,7 @@ export function TimelineView({
           </div>
 
           {/* Timeline Body */}
-          <div className="relative divide-y divide-slate-200 dark:divide-slate-800">
+          <div className="relative divide-y divide-zinc-200 dark:divide-zinc-800">
             {courses.map((course) => {
               const colorStyle = COURSE_COLOR_STYLES[course.color] ?? COURSE_COLOR_STYLES.indigo;
               const courseAllTasks = allTasks.filter((t) => t.courseId === course.id);
@@ -214,38 +208,34 @@ export function TimelineView({
                 : 0;
 
               const { packedTasks, laneCount } = assignLanes(courseFilteredTasks);
-              const rowHeight = Math.max(82, laneCount * laneHeight + 24);
+              const rowHeight = Math.max(76, laneCount * laneHeight + 20);
 
               return (
                 <div
                   key={course.id}
                   style={{ minHeight: `${rowHeight}px` }}
-                  className="flex group hover:bg-slate-50/40 dark:hover:bg-slate-800/20 transition-colors"
+                  className="flex group hover:bg-zinc-50/40 dark:hover:bg-zinc-900/30 transition-colors"
                 >
                   {/* Sticky Left Course Column */}
-                  <div className="sticky left-0 z-10 w-36 sm:w-56 md:w-72 shrink-0 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/90 border-r border-slate-200 dark:border-slate-800 p-2.5 sm:p-4 flex flex-col justify-center transition-colors shadow-[2px_0_6px_-2px_rgba(0,0,0,0.06)] dark:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.4)]">
-                    <div className="flex items-start gap-2 sm:gap-2.5">
-                      <span className={`w-1.5 sm:w-2 h-8 sm:h-9 rounded-full ${colorStyle.bar} shrink-0 mt-0.5`} />
+                  <div className="sticky left-0 z-[99] w-36 sm:w-52 md:w-64 shrink-0 bg-white dark:bg-[#121417] group-hover:bg-zinc-50 dark:group-hover:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 p-3 sm:px-4 flex flex-col justify-center transition-colors ">
+                    <div className="flex items-start gap-2.5">
+                      <span className={`w-1.5 h-1.5 rounded-full ${colorStyle.bar} shrink-0 mt-1.5`} />
                       <div className="min-w-0 flex-1">
-                        <span
-                          className={`inline-block px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-md border ${colorStyle.badge} mb-0.5 sm:mb-1`}
-                        >
-                          {course.code}
-                        </span>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-mono-num text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+                            {course.code}
+                          </span>
+                          <span className="text-[11px] tabular-nums text-zinc-500 dark:text-zinc-400">
+                            {completedCount}/{courseAllTasks.length}
+                          </span>
+                        </div>
                         <h2
-                          className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 leading-snug line-clamp-2"
+                          className="text-xs sm:text-[13px] font-semibold text-zinc-900 dark:text-zinc-100 leading-snug line-clamp-2 mt-0.5"
                           title={course.name}
                         >
                           {course.name}
                         </h2>
-                        <div className="mt-1.5 sm:mt-2 flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">
-                          <span>
-                            {completedCount}/{courseAllTasks.length}{' '}
-                            <span className="hidden sm:inline">selesai</span>
-                          </span>
-                          <span className="font-semibold text-slate-700 dark:text-slate-300">{progressPct}%</span>
-                        </div>
-                        <div className="w-full h-1 sm:h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-1">
+                        <div className="w-full h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden mt-2">
                           <div
                             className={`h-full ${colorStyle.bar} rounded-full transition-all duration-300`}
                             style={{ width: `${progressPct}%` }}
@@ -260,20 +250,17 @@ export function TimelineView({
                     style={{ width: `${timelineWidth}px`, height: `${rowHeight}px` }}
                     className="relative shrink-0"
                   >
-                    {/* Background Grid */}
                     <div className="absolute inset-0 flex pointer-events-none">
                       {days.map((d, idx) => (
                         <div
                           key={idx}
                           style={{ width: `${dayWidth}px` }}
-                          className={`shrink-0 h-full border-r border-slate-100/90 dark:border-slate-800/60 ${
-                            d.isWeekend ? 'bg-slate-50/60 dark:bg-slate-800/25' : ''
-                          }`}
+                          className={`shrink-0 h-full border-r border-zinc-100 dark:border-zinc-800/50 ${d.isWeekend ? 'bg-zinc-50/70 dark:bg-zinc-900/35' : ''
+                            }`}
                         />
                       ))}
                     </div>
 
-                    {/* Task Bars */}
                     {packedTasks.map((task) => {
                       const startMs = new Date(task.start).getTime();
                       const dueMs = new Date(task.due).getTime();
@@ -281,12 +268,10 @@ export function TimelineView({
                       const durationDays = Math.max(1.2, (dueMs - startMs) / MS_PER_DAY);
 
                       const leftPx = offsetDays * dayWidth;
-                      const widthPx = Math.max(44, durationDays * dayWidth);
-                      const topPx = 12 + task.lane * laneHeight;
+                      const widthPx = Math.max(48, durationDays * dayWidth);
+                      const topPx = 10 + task.lane * laneHeight;
 
                       const style = getCategoryStyle(task.category, task.status);
-                      const statusIcon =
-                        task.status === 'Completed' ? '✓' : task.status === 'In Progress' ? '⚡' : '';
 
                       return (
                         <button
@@ -304,27 +289,26 @@ export function TimelineView({
                             width: `${widthPx}px`,
                             top: `${topPx}px`,
                           }}
-                          className={`absolute h-8 sm:h-9 rounded-xl ${style.bg} ${style.text} border ${style.border} shadow-xs px-2 sm:px-2.5 flex items-center justify-between gap-1.5 cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md hover:z-20 overflow-hidden text-left`}
+                          className={`absolute h-7 sm:h-8 rounded-lg border ${style.bar} px-2 sm:px-2.5 flex items-center justify-between gap-2 cursor-pointer transition-colors duration-150 hover:z-20 overflow-hidden text-left`}
                         >
-                          <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
-                            {statusIcon && (
-                              <span className="text-[10px] sm:text-xs font-bold shrink-0">{statusIcon}</span>
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            {task.status === 'Completed' ? (
+                              <Check className="w-3 h-3 shrink-0 opacity-75" />
+                            ) : task.status === 'In Progress' ? (
+                              <CircleDot className={`w-3 h-3 shrink-0 ${style.meta}`} />
+                            ) : (
+                              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`} />
                             )}
                             <span
-                              className={`text-[11px] sm:text-xs font-semibold truncate ${
-                                task.status === 'Completed' ? 'line-through' : ''
-                              }`}
+                              className={`text-[11px] sm:text-xs font-medium truncate ${task.status === 'Completed' ? 'line-through' : ''
+                                }`}
                             >
                               {task.name}
                             </span>
                           </div>
-                          <div className="flex items-center gap-1 shrink-0">
-                            <span
-                              className={`hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-medium rounded-md ${style.pill}`}
-                            >
-                              {task.session}
-                            </span>
-                            <span className="px-1 sm:px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-md bg-black/20">
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className={`hidden sm:inline text-[10px] ${style.meta}`}>{task.session}</span>
+                            <span className={`font-mono-num text-[10px] font-semibold ${style.meta}`}>
                               {task.weight}
                             </span>
                           </div>
@@ -341,10 +325,10 @@ export function TimelineView({
           {showTodayLine && (
             <div
               style={{ left: `${leftColWidth + todayOffsetDays * dayWidth}px` }}
-              className="absolute top-0 bottom-0 z-10 pointer-events-none border-l-2 border-rose-500"
+              className="absolute top-0 bottom-0 z-10 pointer-events-none border-l border-rose-500/80"
             >
-              <div className="bg-rose-500 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-r-md shadow-xs whitespace-nowrap mt-15">
-                HARI INI ({formatDayMonth(today)})
+              <div className="bg-rose-500 text-white text-[10px] font-medium px-1.5 py-0.5 rounded-r-md whitespace-nowrap mt-14 tabular-nums">
+                Hari ini ({formatDayMonth(today)})
               </div>
             </div>
           )}
@@ -355,23 +339,23 @@ export function TimelineView({
       {tooltip && (
         <div
           style={{ left: `${tooltip.x}px`, top: `${tooltip.y}px` }}
-          className="fixed z-40 pointer-events-none bg-slate-900 dark:bg-slate-800 text-white text-xs rounded-xl p-3 shadow-xl max-w-xs border border-slate-700"
+          className="fixed z-40 pointer-events-none bg-zinc-900 dark:bg-zinc-800 text-zinc-100 text-xs rounded-xl p-3 shadow-lg max-w-xs border border-zinc-700/80"
         >
-          <div className="font-bold text-sm mb-1">
-            {tooltip.task.name} ({tooltip.task.session})
+          <div className="font-semibold text-[13px] mb-0.5">{tooltip.task.name}</div>
+          <div className="text-zinc-400 text-[11px] mb-2">
+            {tooltip.courseName} · {tooltip.task.session}
           </div>
-          <div className="text-slate-300 text-[11px] mb-2">{tooltip.courseName}</div>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] border-t border-slate-700 pt-1.5">
-            <span className="text-slate-400">Mulai:</span>
-            <span className="font-medium">{formatDateIndo(tooltip.task.start)}</span>
-            <span className="text-slate-400">Deadline:</span>
-            <span className="font-medium text-amber-300">{formatDateIndo(tooltip.task.due)}</span>
-            <span className="text-slate-400">Bobot / Tipe:</span>
-            <span className="font-medium">
-              {tooltip.task.weight} • {tooltip.task.type}
+          <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[11px] border-t border-zinc-800 dark:border-zinc-700 pt-2 tabular-nums">
+            <span className="text-zinc-400">Mulai</span>
+            <span>{formatDateIndo(tooltip.task.start)}</span>
+            <span className="text-zinc-400">Deadline</span>
+            <span className="text-amber-300 font-medium">{formatDateIndo(tooltip.task.due)}</span>
+            <span className="text-zinc-400">Bobot / Tipe</span>
+            <span>
+              {tooltip.task.weight} · {tooltip.task.type}
             </span>
-            <span className="text-slate-400">Status:</span>
-            <span className="font-medium">{tooltip.task.status}</span>
+            <span className="text-zinc-400">Status</span>
+            <span>{tooltip.task.status}</span>
           </div>
         </div>
       )}

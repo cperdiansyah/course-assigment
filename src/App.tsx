@@ -158,7 +158,7 @@ export default function App() {
         onOpenData={() => setDataModalOpen(true)}
       />
 
-      <main className="flex-1 flex flex-col overflow-hidden p-2.5 sm:p-6">
+      <main className="flex-1 flex flex-col overflow-hidden p-2.5 sm:p-4">
         {viewMode === 'timeline' ? (
           <TimelineView
             courses={courses}
