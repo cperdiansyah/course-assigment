@@ -27,6 +27,13 @@ body {
   caret-color: var(--accent);
 }
 
+button,
+select,
+input,
+textarea {
+  touch-action: manipulation;
+}
+
 ::selection {
   background-color: light-dark(rgba(79, 70, 229, 0.14), rgba(99, 102, 241, 0.28));
   color: light-dark(#1e1b4b, #eef2ff);

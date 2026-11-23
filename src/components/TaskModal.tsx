@@ -143,17 +143,17 @@ export function TaskModal({
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+      <form onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-3.5 max-h-[82dvh] overflow-y-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="min-w-0">
+            <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300 mb-1">
               Mata Kuliah
             </label>
             <select
               value={courseId}
               onChange={(e) => setCourseId(e.target.value)}
               required
-              className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+              className="w-full min-w-0 px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
             >
               {courses.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -162,9 +162,9 @@ export function TaskModal({
               ))}
             </select>
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300">
+              <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300">
                 Status Pengerjaan
               </label>
               {manualStatus && start && due && (
@@ -174,9 +174,9 @@ export function TaskModal({
                     setManualStatus(false);
                     setStatus(computeAutoStatus(start, due, today));
                   }}
-                  className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                  className="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
                 >
-                  Auto-sync tanggal
+                  Auto-sync
                 </button>
               )}
             </div>
@@ -186,7 +186,7 @@ export function TaskModal({
                 setStatus(e.target.value as TaskStatus);
                 setManualStatus(true);
               }}
-              className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+              className="w-full min-w-0 px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
             >
               <option value="Not Started">Not Started</option>
               <option value="In Progress">In Progress</option>
@@ -195,9 +195,9 @@ export function TaskModal({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="min-w-0">
+            <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300 mb-1">
               Nama Tugas
             </label>
             <input
@@ -207,31 +207,31 @@ export function TaskModal({
               placeholder="Contoh: Personal Assignment 1"
               required
               autoFocus
-              className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+              className="w-full min-w-0 px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
             />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Sesi</label>
+          <div className="min-w-0">
+            <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300 mb-1">Sesi</label>
             <input
               type="text"
               value={session}
               onChange={(e) => setSession(e.target.value)}
               placeholder="Contoh: Session 3"
               required
-              className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+              className="w-full min-w-0 px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="min-w-0">
+            <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300 mb-1">
               Kategori
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as TaskCategory)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+              className="w-full min-w-0 px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
             >
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -240,19 +240,19 @@ export function TaskModal({
               ))}
             </select>
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Tipe</label>
+          <div className="min-w-0">
+            <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300 mb-1">Tipe</label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as TaskType)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+              className="w-full min-w-0 px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
             >
               <option value="Individual">Individual</option>
               <option value="Group">Group</option>
             </select>
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+          <div className="min-w-0">
+            <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300 mb-1">
               Bobot Nilai
             </label>
             <input
@@ -261,14 +261,14 @@ export function TaskModal({
               onChange={(e) => setWeight(e.target.value)}
               placeholder="20%"
               required
-              className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+              className="w-full min-w-0 px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="min-w-0">
+            <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300 mb-1">
               Start Date
             </label>
             <input
@@ -276,11 +276,11 @@ export function TaskModal({
               value={start}
               onChange={(e) => handleStartChange(e.target.value)}
               required
-              className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+              className="w-full min-w-0 px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
             />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+          <div className="min-w-0">
+            <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300 mb-1">
               Due Date
             </label>
             <input
@@ -288,13 +288,13 @@ export function TaskModal({
               value={due}
               onChange={(e) => handleDueChange(e.target.value)}
               required
-              className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+              className="w-full min-w-0 px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+          <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-300 mb-1">
             Catatan (opsional)
           </label>
           <textarea
@@ -302,14 +302,14 @@ export function TaskModal({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Link submission, anggota kelompok, atau detail penting..."
-            className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 resize-none"
+            className="w-full px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 resize-none"
           />
         </div>
 
         {task && countdown && (
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 flex items-center justify-between">
+          <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-300 flex items-center justify-between tabular-nums">
             <span>Sisa waktu dari hari ini:</span>
-            <strong className="text-slate-900 dark:text-white font-semibold">{countdown.text}</strong>
+            <strong className="text-zinc-900 dark:text-zinc-100 font-semibold">{countdown.text}</strong>
           </div>
         )}
 

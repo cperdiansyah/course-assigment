@@ -146,7 +146,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={viewMode === 'timeline' ? 'h-dvh flex flex-col overflow-hidden' : 'min-h-dvh flex flex-col'}>
       <Header
         today={today}
         stats={stats}

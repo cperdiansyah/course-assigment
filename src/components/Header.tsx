@@ -80,18 +80,18 @@ export function Header({
               </div>
               <p className="text-[11px] text-zinc-500 dark:text-zinc-400 tabular-nums truncate">
                 {stats.total} tugas
-                <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">/</span>
+                <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">·</span>
                 <span className="text-zinc-700 dark:text-zinc-300 font-medium">{stats.inProgress} berjalan</span>
                 {stats.urgent > 0 && (
-                  <>
-                    <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">/</span>
+                  <span className="hidden sm:inline">
+                    <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">·</span>
                     <span className="text-amber-700 dark:text-amber-400 font-medium">
                       {stats.urgent} deadline &le;7h
                     </span>
-                  </>
+                  </span>
                 )}
-                <span className="hidden sm:inline">
-                  <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">/</span>
+                <span className="hidden md:inline">
+                  <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">·</span>
                   {stats.completed} selesai
                 </span>
               </p>
@@ -177,25 +177,25 @@ export function Header({
             <button
               type="button"
               onClick={onAddTask}
-              className="h-8 px-3 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg transition-colors duration-150 active:scale-[0.97] flex items-center gap-1 cursor-pointer whitespace-nowrap"
+              className="h-8 px-2.5 sm:px-3 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg transition-colors duration-150 active:scale-[0.97] flex items-center gap-1 cursor-pointer whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Tugas</span>
+              <span className="hidden min-[380px]:inline">Tugas</span>
             </button>
           </div>
         </div>
 
         {/* Filter & Controls Row */}
-        <div className="py-2 border-t border-zinc-100 dark:border-zinc-800/80 flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
-            <div className="relative flex-1 sm:flex-initial min-w-[160px]">
+        <div className="py-2 border-t border-zinc-100 dark:border-zinc-800/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
+            <div className="relative w-full sm:w-52">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder="Cari tugas, matkul, sesi..."
                 aria-label="Cari tugas atau sesi"
-                className="w-full sm:w-52 h-8 pl-8 pr-3 text-xs bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full h-8 pl-8 pr-3 text-base sm:text-xs bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors"
               />
               <Search className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 absolute left-2.5 top-2.5 pointer-events-none" />
             </div>
@@ -204,7 +204,7 @@ export function Header({
               value={filterType}
               onChange={(e) => onFilterTypeChange(e.target.value as 'ALL' | TaskType)}
               aria-label="Filter tipe tugas"
-              className="h-8 px-2.5 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-200 cursor-pointer"
+              className="h-8 px-2.5 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-200 cursor-pointer flex-1 sm:flex-initial"
             >
               <option value="ALL">Semua tipe</option>
               <option value="Individual">Individual</option>
@@ -215,7 +215,7 @@ export function Header({
               value={filterStatus}
               onChange={(e) => onFilterStatusChange(e.target.value as 'ALL' | TaskStatus)}
               aria-label="Filter status tugas"
-              className="h-8 px-2.5 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-200 cursor-pointer"
+              className="h-8 px-2.5 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-200 cursor-pointer flex-1 sm:flex-initial"
             >
               <option value="ALL">Semua status</option>
               <option value="Not Started">Not Started</option>
@@ -224,7 +224,7 @@ export function Header({
             </select>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 sm:gap-2">
             {/* Mobile View Switcher */}
             <div
               className="flex md:hidden items-center bg-zinc-100 dark:bg-zinc-800/80 p-0.5 rounded-lg border border-zinc-200/80 dark:border-zinc-700/70"

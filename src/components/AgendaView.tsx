@@ -138,16 +138,18 @@ export function AgendaView({
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-3 pl-3.5 sm:pl-0 shrink-0 tabular-nums">
-                        <span className="font-mono-num text-xs text-zinc-500 dark:text-zinc-400">
-                          {task.weight}
-                        </span>
-                        <span className="text-xs text-zinc-500 dark:text-zinc-400 hidden md:inline">
-                          {formatDateIndo(task.due)}
-                        </span>
+                      <div className="flex items-center justify-between sm:justify-end gap-3 pl-3.5 sm:pl-0 shrink-0 tabular-nums">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono-num text-xs text-zinc-500 dark:text-zinc-400">
+                            {task.weight}
+                          </span>
+                          <span className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400">
+                            {formatDateIndo(task.due)}
+                          </span>
+                        </div>
                         {task.status !== 'Completed' && (
                           <span
-                            className={`text-xs font-medium min-w-[78px] text-right ${
+                            className={`text-xs font-medium min-w-[72px] text-right ${
                               countdown.isOverdue
                                 ? 'text-rose-600 dark:text-rose-400'
                                 : countdown.isUrgent

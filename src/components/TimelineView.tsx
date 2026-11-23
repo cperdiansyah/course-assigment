@@ -123,8 +123,8 @@ export function TimelineView({
 
   return (
     <div className="bg-white dark:bg-[#121417] border border-zinc-200 dark:border-zinc-800 rounded-xl flex-1 flex flex-col overflow-hidden relative">
-      {/* Compact Legend Bar */}
-      <div className="px-3 sm:px-4 py-2 bg-zinc-50/70 dark:bg-zinc-900/60 border-b border-zinc-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-600 dark:text-zinc-400">
+      {/* Compact Legend Bar (Desktop/Tablet) */}
+      <div className="hidden sm:flex px-4 py-2 bg-zinc-50/70 dark:bg-zinc-900/60 border-b border-zinc-200 dark:border-zinc-800 flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-600 dark:text-zinc-400">
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <span className="font-medium text-zinc-500 dark:text-zinc-400">Kategori:</span>
           <div className="flex items-center gap-1.5">
@@ -156,7 +156,7 @@ export function TimelineView({
           <div className="sticky top-0 z-20 flex bg-white dark:bg-[#121417] border-b border-zinc-200 dark:border-zinc-800">
             <div
               ref={cornerHeaderRef}
-              className="sticky left-0 z-30 w-36 sm:w-52 md:w-64 shrink-0 bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 px-3 sm:px-4 py-2.5 flex items-center justify-between"
+              className="sticky left-0 z-30 w-28 sm:w-52 md:w-64 shrink-0 bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 px-2.5 sm:px-4 py-2.5 flex items-center justify-between"
             >
               <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Mata kuliah</span>
               <span className="text-[11px] text-zinc-400 dark:text-zinc-500 hidden sm:inline">Progres</span>
@@ -193,6 +193,17 @@ export function TimelineView({
                   </div>
                 ))}
               </div>
+
+              {showTodayLine && (
+                <div
+                  style={{ left: `${todayOffsetDays * dayWidth}px` }}
+                  className="absolute top-0.5 z-10 pointer-events-none"
+                >
+                  <span className="inline-block bg-rose-500 text-white text-[10px] font-medium px-1.5 py-0.5 rounded-r-md whitespace-nowrap tabular-nums">
+                    Hari ini ({formatDayMonth(today)})
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -217,20 +228,20 @@ export function TimelineView({
                   className="flex group hover:bg-zinc-50/40 dark:hover:bg-zinc-900/30 transition-colors"
                 >
                   {/* Sticky Left Course Column */}
-                  <div className="sticky left-0 z-[99] w-36 sm:w-52 md:w-64 shrink-0 bg-white dark:bg-[#121417] group-hover:bg-zinc-50 dark:group-hover:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 p-3 sm:px-4 flex flex-col justify-center transition-colors ">
-                    <div className="flex items-start gap-2.5">
+                  <div className="sticky left-0 z-20 w-28 sm:w-52 md:w-64 shrink-0 bg-white dark:bg-[#121417] group-hover:bg-zinc-50 dark:group-hover:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 p-2.5 sm:px-4 flex flex-col justify-center transition-colors">
+                    <div className="flex items-start gap-2">
                       <span className={`w-1.5 h-1.5 rounded-full ${colorStyle.bar} shrink-0 mt-1.5`} />
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="font-mono-num text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+                        <div className="flex items-center justify-between gap-1.5">
+                          <span className="font-mono-num text-[10px] font-medium text-zinc-500 dark:text-zinc-400 truncate">
                             {course.code}
                           </span>
-                          <span className="text-[11px] tabular-nums text-zinc-500 dark:text-zinc-400">
+                          <span className="text-[10px] sm:text-[11px] tabular-nums text-zinc-500 dark:text-zinc-400 shrink-0">
                             {completedCount}/{courseAllTasks.length}
                           </span>
                         </div>
                         <h2
-                          className="text-xs sm:text-[13px] font-semibold text-zinc-900 dark:text-zinc-100 leading-snug line-clamp-2 mt-0.5"
+                          className="text-[11px] sm:text-[13px] font-semibold text-zinc-900 dark:text-zinc-100 leading-tight break-words line-clamp-2 mt-0.5"
                           title={course.name}
                         >
                           {course.name}
@@ -289,9 +300,9 @@ export function TimelineView({
                             width: `${widthPx}px`,
                             top: `${topPx}px`,
                           }}
-                          className={`absolute h-7 sm:h-8 rounded-lg border ${style.bar} px-2 sm:px-2.5 flex items-center justify-between gap-2 cursor-pointer transition-colors duration-150 hover:z-20 overflow-hidden text-left`}
+                          className={`absolute h-7 sm:h-8 rounded-lg border ${style.bar} px-2 sm:px-2.5 flex items-center justify-between gap-2 cursor-pointer transition-colors duration-150 hover:z-15 overflow-clip text-left`}
                         >
-                          <div className="flex items-center gap-1.5 min-w-0">
+                          <div className="sticky left-[118px] sm:left-[214px] md:left-[262px] flex items-center gap-1.5 min-w-0">
                             {task.status === 'Completed' ? (
                               <Check className="w-3 h-3 shrink-0 opacity-75" />
                             ) : task.status === 'In Progress' ? (
@@ -308,9 +319,11 @@ export function TimelineView({
                           </div>
                           <div className="flex items-center gap-1.5 shrink-0">
                             <span className={`hidden sm:inline text-[10px] ${style.meta}`}>{task.session}</span>
-                            <span className={`font-mono-num text-[10px] font-semibold ${style.meta}`}>
-                              {task.weight}
-                            </span>
+                            {widthPx >= 90 && (
+                              <span className={`font-mono-num text-[10px] font-semibold ${style.meta}`}>
+                                {task.weight}
+                              </span>
+                            )}
                           </div>
                         </button>
                       );
@@ -321,16 +334,12 @@ export function TimelineView({
             })}
           </div>
 
-          {/* Today Marker Vertical Line */}
+          {/* Today Marker Vertical Line (sits under sticky left column z-20 and sticky header z-20) */}
           {showTodayLine && (
             <div
               style={{ left: `${leftColWidth + todayOffsetDays * dayWidth}px` }}
-              className="absolute top-0 bottom-0 z-10 pointer-events-none border-l border-rose-500/80"
-            >
-              <div className="bg-rose-500 text-white text-[10px] font-medium px-1.5 py-0.5 rounded-r-md whitespace-nowrap mt-14 tabular-nums">
-                Hari ini ({formatDayMonth(today)})
-              </div>
-            </div>
+              className="absolute top-0 bottom-0 z-[5] pointer-events-none border-l border-rose-500/80"
+            />
           )}
         </div>
       </div>
