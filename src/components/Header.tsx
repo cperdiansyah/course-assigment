@@ -8,6 +8,7 @@ import {
   ListTodo,
   Moon,
   Plus,
+  Route,
   Search,
   Sun,
   Zap,
@@ -272,6 +273,18 @@ export function Header({
               >
                 <ListTodo className="w-3.5 h-3.5" />
                 <span>Agenda</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onViewModeChange('journey')}
+                className={`px-2.5 py-1 text-xs font-semibold rounded-lg flex items-center gap-1 transition cursor-pointer ${
+                  viewMode === 'journey'
+                    ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                }`}
+              >
+                <Route className="w-3.5 h-3.5" />
+                <span>Perjalanan</span>
               </button>
             </div>
 

@@ -48,4 +48,4 @@ export interface AppDataExport {
   tasks: Task[];
 }
 
-export type ViewMode = 'timeline' | 'agenda';
+export type ViewMode = 'timeline' | 'agenda' | 'journey';

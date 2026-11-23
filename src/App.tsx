@@ -3,6 +3,7 @@ import { AgendaView } from './components/AgendaView';
 import { CourseModal } from './components/CourseModal';
 import { DataModal } from './components/DataModal';
 import { Header } from './components/Header';
+import { JourneyView } from './components/JourneyView';
 import { TaskModal } from './components/TaskModal';
 import { TimelineView } from './components/TimelineView';
 import { DEFAULT_COURSES, getSeedTasks } from './data/seed';
@@ -168,10 +169,19 @@ export default function App() {
             scrollTrigger={scrollTrigger}
             onSelectTask={handleSelectTask}
           />
-        ) : (
+        ) : viewMode === 'agenda' ? (
           <AgendaView
             courses={courses}
             filteredTasks={filteredTasks}
+            today={today}
+            onSelectTask={handleSelectTask}
+            onQuickToggleStatus={handleQuickToggleStatus}
+          />
+        ) : (
+          <JourneyView
+            courses={courses}
+            filteredTasks={filteredTasks}
+            allTasks={tasks}
             today={today}
             onSelectTask={handleSelectTask}
             onQuickToggleStatus={handleQuickToggleStatus}
