@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AgendaView } from './components/AgendaView';
 import { CourseModal } from './components/CourseModal';
-import { DataModal } from './components/DataModal';
+import { DataModal, ImportMode } from './components/DataModal';
 import { Header } from './components/Header';
 import { JourneyView } from './components/JourneyView';
 import { TaskModal } from './components/TaskModal';
@@ -10,7 +10,7 @@ import { DEFAULT_COURSES, getSeedTasks } from './data/seed';
 import { useTheme } from './hooks/useTheme';
 import { Course, Task, TaskStatus, TaskType, ViewMode } from './types';
 import { MS_PER_DAY } from './utils/date';
-import { loadAppState, saveAppState } from './utils/storage';
+import { loadAppState, mergeAppData, saveAppState } from './utils/storage';
 
 export default function App() {
   const [today] = useState<Date>(() => new Date());
@@ -127,8 +127,18 @@ export default function App() {
     }));
   };
 
-  const handleImportData = (importedCourses: Course[], importedTasks: Task[]) => {
-    setAppState({ courses: importedCourses, tasks: importedTasks });
+  const handleImportData = (
+    importedCourses: Course[],
+    importedTasks: Task[],
+    mode: ImportMode,
+  ): number => {
+    if (mode === 'flush') {
+      setAppState({ courses: importedCourses, tasks: importedTasks });
+      return importedTasks.length;
+    }
+    const merged = mergeAppData(courses, tasks, importedCourses, importedTasks);
+    setAppState({ courses: merged.courses, tasks: merged.tasks });
+    return merged.addedCount;
   };
 
   const handleResetDefault = () => {
@@ -212,6 +222,7 @@ export default function App() {
         open={dataModalOpen}
         courses={courses}
         tasks={tasks}
+        today={today}
         onClose={() => setDataModalOpen(false)}
         onImport={handleImportData}
         onResetDefault={handleResetDefault}
