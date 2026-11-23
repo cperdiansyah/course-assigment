@@ -156,7 +156,7 @@ export function TimelineView({
           <div className="sticky top-0 z-20 flex bg-white dark:bg-[#121417] border-b border-zinc-200 dark:border-zinc-800">
             <div
               ref={cornerHeaderRef}
-              className="sticky left-0 z-30 w-28 sm:w-52 md:w-64 shrink-0 bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 px-2.5 sm:px-4 py-2.5 flex items-center justify-between"
+              className="sticky left-0 z-30 w-32 sm:w-52 md:w-64 shrink-0 bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 px-2.5 sm:px-4 py-2.5 flex items-center justify-between"
             >
               <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Mata kuliah</span>
               <span className="text-[11px] text-zinc-400 dark:text-zinc-500 hidden sm:inline">Progres</span>
@@ -228,7 +228,7 @@ export function TimelineView({
                   className="flex group hover:bg-zinc-50/40 dark:hover:bg-zinc-900/30 transition-colors"
                 >
                   {/* Sticky Left Course Column */}
-                  <div className="sticky left-0 z-20 w-28 sm:w-52 md:w-64 shrink-0 bg-white dark:bg-[#121417] group-hover:bg-zinc-50 dark:group-hover:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 p-2.5 sm:px-4 flex flex-col justify-center transition-colors">
+                  <div className="sticky left-0 z-20 w-32 sm:w-52 md:w-64 shrink-0 bg-white dark:bg-[#121417] group-hover:bg-zinc-50 dark:group-hover:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 p-2.5 sm:px-4 flex flex-col justify-center transition-colors">
                     <div className="flex items-start gap-2">
                       <span className={`w-1.5 h-1.5 rounded-full ${colorStyle.bar} shrink-0 mt-1.5`} />
                       <div className="min-w-0 flex-1">
@@ -300,30 +300,33 @@ export function TimelineView({
                             width: `${widthPx}px`,
                             top: `${topPx}px`,
                           }}
-                          className={`absolute h-7 sm:h-8 rounded-lg border ${style.bar} px-2 sm:px-2.5 flex items-center justify-between gap-2 cursor-pointer transition-colors duration-150 hover:z-15 overflow-clip text-left`}
+                          className={`absolute h-7 sm:h-8 rounded-lg border ${style.bar} px-2 sm:px-2.5 flex items-center cursor-pointer transition-colors duration-150 hover:z-15 overflow-clip text-left`}
                         >
-                          <div className="sticky left-[118px] sm:left-[214px] md:left-[262px] flex items-center gap-1.5 min-w-0">
-                            {task.status === 'Completed' ? (
-                              <Check className="w-3 h-3 shrink-0 opacity-75" />
-                            ) : task.status === 'In Progress' ? (
-                              <CircleDot className={`w-3 h-3 shrink-0 ${style.meta}`} />
-                            ) : (
-                              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`} />
-                            )}
-                            <span
-                              className={`text-[11px] sm:text-xs font-medium truncate ${task.status === 'Completed' ? 'line-through' : ''
+                          <div className="sticky left-[134px] sm:left-[214px] md:left-[262px] flex items-center justify-between gap-2 min-w-0 w-full">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              {task.status === 'Completed' ? (
+                                <Check className="w-3 h-3 shrink-0 opacity-75" />
+                              ) : task.status === 'In Progress' ? (
+                                <CircleDot className={`w-3 h-3 shrink-0 ${style.meta}`} />
+                              ) : (
+                                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`} />
+                              )}
+                              <span
+                                className={`text-[11px] sm:text-xs font-medium truncate ${
+                                  task.status === 'Completed' ? 'line-through' : ''
                                 }`}
-                            >
-                              {task.name}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <span className={`hidden sm:inline text-[10px] ${style.meta}`}>{task.session}</span>
-                            {widthPx >= 90 && (
-                              <span className={`font-mono-num text-[10px] font-semibold ${style.meta}`}>
-                                {task.weight}
+                              >
+                                {task.name}
                               </span>
-                            )}
+                            </div>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <span className={`hidden sm:inline text-[10px] ${style.meta}`}>{task.session}</span>
+                              {widthPx >= 90 && (
+                                <span className={`font-mono-num text-[10px] font-semibold ${style.meta}`}>
+                                  {task.weight}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </button>
                       );

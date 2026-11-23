@@ -71,8 +71,8 @@ export function Header({
             </div>
             <div className="min-w-0">
               <div className="flex items-baseline gap-2.5">
-                <h1 className="text-sm sm:text-[15px] font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight truncate">
-                  Timeline Tugas Kuliah
+                <h1 className="text-[13px] sm:text-[15px] font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight truncate">
+                  Timeline Tugas
                 </h1>
                 <span className="hidden md:inline text-xs text-zinc-400 dark:text-zinc-500 tabular-nums">
                   {formatShortDate(today)}
