@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Assignment Timeline Tracker</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar for smooth timeline experience */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900 dark:selection:bg-indigo-900 dark:selection:text-indigo-100 transition-colors duration-200">
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex flex-col">
+        
+        <!-- Top Header & Summary -->
+        <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-sm transition-colors">
+            <div class="max-w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
+                    
+                    <!-- Brand, Title & Mobile Theme Toggler -->
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 sm:gap-3">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200 dark:shadow-indigo-950/60 shrink-0">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 class="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">Timeline Tugas Kuliah</h1>
+                                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <span class="inline-block w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                                    Hari ini: <strong id="current-date-label" class="text-slate-700 dark:text-slate-200 font-medium">24 Nov 2026</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Theme Toggle Button (Visible on Mobile/Tablet right next to title) -->
+                        <button type="button" class="theme-toggle-btn lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition cursor-pointer" title="Ganti Tema (Terang/Gelap)" aria-label="Ganti Tema">
+                            <svg class="sun-icon hidden w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            <svg class="moon-icon w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Stats Pills + Desktop Theme Toggler -->
+                    <div class="flex items-center gap-3">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 flex-1 lg:flex-initial">
+                            <div class="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 rounded-xl px-3 sm:px-3.5 py-1.5 sm:py-2 flex items-center justify-between gap-2">
+                                <div>
+                                    <p class="text-[10px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase">Total Tugas</p>
+                                    <p id="stat-total" class="text-base sm:text-lg font-bold text-slate-800 dark:text-white">0</p>
+                                </div>
+                                <span class="p-1.5 bg-slate-200/60 dark:bg-slate-700/70 rounded-lg text-slate-600 dark:text-slate-300">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                </span>
+                            </div>
+                            <div class="bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 rounded-xl px-3 sm:px-3.5 py-1.5 sm:py-2 flex items-center justify-between gap-2">
+                                <div>
+                                    <p class="text-[10px] sm:text-[11px] font-medium text-amber-700 dark:text-amber-400 uppercase">Deadline &le; 7d</p>
+                                    <p id="stat-urgent" class="text-base sm:text-lg font-bold text-amber-800 dark:text-amber-300">0</p>
+                                </div>
+                                <span class="p-1.5 bg-amber-200/60 dark:bg-amber-900/50 rounded-lg text-amber-700 dark:text-amber-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </span>
+                            </div>
+                            <div class="bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 rounded-xl px-3 sm:px-3.5 py-1.5 sm:py-2 flex items-center justify-between gap-2">
+                                <div>
+                                    <p class="text-[10px] sm:text-[11px] font-medium text-blue-700 dark:text-blue-400 uppercase">In Progress</p>
+                                    <p id="stat-progress" class="text-base sm:text-lg font-bold text-blue-800 dark:text-blue-300">0</p>
+                                </div>
+                                <span class="p-1.5 bg-blue-200/60 dark:bg-blue-900/50 rounded-lg text-blue-700 dark:text-blue-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                </span>
+                            </div>
+                            <div class="bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/60 rounded-xl px-3 sm:px-3.5 py-1.5 sm:py-2 flex items-center justify-between gap-2">
+                                <div>
+                                    <p class="text-[10px] sm:text-[11px] font-medium text-emerald-700 dark:text-emerald-400 uppercase">Selesai</p>
+                                    <p id="stat-completed" class="text-base sm:text-lg font-bold text-emerald-800 dark:text-emerald-300">0</p>
+                                </div>
+                                <span class="p-1.5 bg-emerald-200/60 dark:bg-emerald-900/50 rounded-lg text-emerald-700 dark:text-emerald-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Desktop Theme Toggle Button -->
+                        <button type="button" class="theme-toggle-btn hidden lg:flex items-center justify-center p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition cursor-pointer" title="Ganti Tema (Terang/Gelap)" aria-label="Ganti Tema">
+                            <svg class="sun-icon hidden w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            <svg class="moon-icon w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Responsive Filter & Action Toolbar -->
+                <div class="mt-3 sm:mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center md:justify-between gap-2.5 sm:gap-3">
+                    <!-- Search & Filters Grid on Mobile, Flex on Desktop -->
+                    <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2">
+                        <!-- Search (Full width on mobile) -->
+                        <div class="relative col-span-2 sm:col-span-1">
+                            <input type="text" id="search-input" placeholder="Cari tugas atau sesi..." 
+                                class="w-full sm:w-56 pl-8 pr-3 py-1.5 text-xs sm:text-sm bg-slate-100/80 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-800 transition">
+                            <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+
+                        <!-- Filter Tipe -->
+                        <select id="filter-type" class="w-full sm:w-auto py-1.5 px-2.5 sm:px-3 text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-700 dark:text-slate-200 cursor-pointer">
+                            <option value="ALL">Semua Tipe</option>
+                            <option value="Individual">Individual</option>
+                            <option value="Group">Group</option>
+                        </select>
+
+                        <!-- Filter Status -->
+                        <select id="filter-status" class="w-full sm:w-auto py-1.5 px-2.5 sm:px-3 text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-700 dark:text-slate-200 cursor-pointer">
+                            <option value="ALL">Semua Status</option>
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <!-- Zoom & Action Buttons -->
+                    <div class="flex items-center justify-between sm:justify-end gap-2">
+                        <!-- Zoom Level -->
+                        <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <button id="zoom-out" title="Perkecil Skala" class="px-2.5 py-1 text-xs font-bold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-xs transition cursor-pointer">-</button>
+                            <span class="px-2 text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400">Zoom</span>
+                            <button id="zoom-in" title="Perbesar Skala" class="px-2.5 py-1 text-xs font-bold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-xs transition cursor-pointer">+</button>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button id="btn-scroll-today" class="px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-800/70 rounded-xl transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+                                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                                Hari Ini
+                            </button>
+                            <button id="btn-add-task" class="px-3 sm:px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm shadow-indigo-200 dark:shadow-indigo-950/60 transition flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                <span>Tambah</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Timeline Workspace -->
+        <main class="flex-1 flex flex-col overflow-hidden p-2.5 sm:p-6">
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm flex-1 flex flex-col overflow-hidden relative transition-colors">
+                
+                <!-- Responsive Legend Bar -->
+                <div class="px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-50/80 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs">
+                    <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+                        <span class="font-semibold text-slate-600 dark:text-slate-300">Kategori:</span>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-blue-500"></span>
+                            <span class="text-slate-600 dark:text-slate-300">Personal</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-purple-500"></span>
+                            <span class="text-slate-600 dark:text-slate-300">Team</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-amber-500"></span>
+                            <span class="text-slate-600 dark:text-slate-300">Quiz</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-emerald-500"></span>
+                            <span class="text-slate-600 dark:text-slate-300">LAB / Practicum</span>
+                        </div>
+                    </div>
+                    <div class="text-slate-400 dark:text-slate-500 italic hidden md:block">
+                        Status otomatis mengikuti tanggal hari ini • Klik bar untuk detail/override manual
+                    </div>
+                </div>
+
+                <!-- Scrollable Timeline Container -->
+                <div id="timeline-scroll-container" class="flex-1 overflow-auto relative select-none">
+                    <div id="timeline-canvas" class="relative min-w-max">
+                        
+                        <!-- Sticky Timeline Header (Months & Days) -->
+                        <div class="sticky top-0 z-20 flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
+                            <!-- Top-Left Corner (Sticky Left & Top) -->
+                            <div class="sticky left-0 z-30 w-36 sm:w-56 md:w-72 shrink-0 bg-slate-50 dark:bg-slate-800/95 border-r border-slate-200 dark:border-slate-700 px-2.5 sm:px-4 py-3 flex items-center justify-between">
+                                <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Mata Kuliah</span>
+                                <span class="text-[10px] sm:text-[11px] font-medium text-slate-400 dark:text-slate-500 hidden sm:inline">Progress</span>
+                            </div>
+                            <!-- Date Scale Header -->
+                            <div id="timeline-dates-header" class="relative flex flex-col">
+                                <!-- Months Row -->
+                                <div id="timeline-months-row" class="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50 h-7"></div>
+                                <!-- Days Row -->
+                                <div id="timeline-days-row" class="flex h-8 bg-white dark:bg-slate-900"></div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Body (Course Rows + Bars) -->
+                        <div id="timeline-body" class="relative divide-y divide-slate-200 dark:divide-slate-800">
+                            <!-- Rows injected dynamically via JS -->
+                        </div>
+
+                        <!-- Today Marker Vertical Line -->
+                        <div id="today-line" class="absolute top-0 bottom-0 z-10 pointer-events-none border-l-2 border-rose-500" style="display: none;">
+                            <div class="bg-rose-500 text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-r-md shadow-sm whitespace-nowrap mt-15">
+                                HARI INI (24 Nov)
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Task Detail & Edit Modal -->
+    <div id="task-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 dark:bg-black/70 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-lg overflow-hidden transform transition-all my-auto">
+            <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-800/60">
+                <div class="min-w-0 pr-2">
+                    <span id="modal-course-badge" class="inline-block px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 mb-1 truncate max-w-full">Mata Kuliah</span>
+                    <h3 id="modal-title" class="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate">Detail Tugas</h3>
+                </div>
+                <button id="close-modal" class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <form id="task-form" class="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
+                <input type="hidden" id="form-task-id">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Mata Kuliah</label>
+                        <select id="form-course" required class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100">
+                            <option value="Entrepreneurship">Entrepreneurship</option>
+                            <option value="Calculus and Scientific Computing">Calculus and Scientific Computing</option>
+                            <option value="Software Design (LEC)">Software Design (LEC)</option>
+                            <option value="Software Design (LAB)">Software Design (LAB)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Status Pengerjaan</label>
+                        <select id="form-status" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100">
+                            <option value="Not Started">⚪ Not Started</option>
+                            <option value="In Progress">🔵 In Progress</option>
+                            <option value="Completed">🟢 Completed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nama Tugas</label>
+                        <input type="text" id="form-name" required class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Sesi</label>
+                        <input type="text" id="form-session" placeholder="Contoh: Session 3" required class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Kategori</label>
+                        <select id="form-category" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100">
+                            <option value="Personal Assignment">Personal Assignment</option>
+                            <option value="Team Assignment">Team Assignment</option>
+                            <option value="Quiz">Quiz</option>
+                            <option value="LAB Team Assignment">LAB Team Assignment</option>
+                            <option value="LAB Project Team">LAB Project Team</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Tipe</label>
+                        <select id="form-type" class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100">
+                            <option value="Individual">Individual</option>
+                            <option value="Group">Group</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Bobot Nilai</label>
+                        <input type="text" id="form-weight" placeholder="20%" required class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Start Date</label>
+                        <input type="datetime-local" id="form-start" required class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 dark:[color-scheme:dark]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Due Date</label>
+                        <input type="datetime-local" id="form-due" required class="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 dark:[color-scheme:dark]">
+                    </div>
+                </div>
+
+                <!-- Countdown Info Box -->
+                <div id="modal-countdown-box" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 flex items-center justify-between">
+                    <span>Sisa waktu dari hari ini:</span>
+                    <strong id="modal-countdown-text" class="text-slate-900 dark:text-white font-semibold">-</strong>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+                    <button type="button" id="btn-delete-task" class="px-3 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-xl transition cursor-pointer">
+                        Hapus Tugas
+                    </button>
+                    <div class="flex items-center gap-2 ml-auto">
+                        <button type="button" id="btn-cancel-modal" class="px-3.5 sm:px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-4 sm:px-5 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm transition cursor-pointer">
+                            Simpan
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Tooltip on Hover (Desktop pointer devices) -->
+    <div id="hover-tooltip" class="fixed z-40 pointer-events-none hidden bg-slate-900 dark:bg-slate-800 text-white text-xs rounded-xl p-3 shadow-xl max-w-xs border border-slate-700">
+        <div class="font-bold text-sm mb-1" id="tt-name"></div>
+        <div class="text-slate-300 text-[11px] mb-2" id="tt-course"></div>
+        <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] border-t border-slate-700 pt-1.5">
+            <span class="text-slate-400">Mulai:</span><span id="tt-start" class="font-medium"></span>
+            <span class="text-slate-400">Deadline:</span><span id="tt-due" class="font-medium text-amber-300"></span>
+            <span class="text-slate-400">Bobot / Tipe:</span><span id="tt-meta" class="font-medium"></span>
+            <span class="text-slate-400">Status:</span><span id="tt-status" class="font-medium"></span>
+        </div>
+    </div>
+
+    <script>
+        // Simulated "Today" matching current context: November 24, 2026
+        const TODAY = new Date('2026-11-24T08:00:00');
+
+        // Helper: Automatically compute status from Start Date & Due Date relative to TODAY
+        function computeAutoStatus(startStr, dueStr) {
+            const start = new Date(startStr);
+            const due = new Date(dueStr);
+            if (TODAY > due) {
+                return "Completed";
+            } else if (TODAY >= start && TODAY <= due) {
+                return "In Progress";
+            }
+            return "Not Started";
+        }
+
+        // Initial Assignment Data with automatic date-based status evaluation
+        let tasks = [
+            { id: 1, course: "Entrepreneurship", category: "Personal Assignment", session: "Session 3", name: "Personal Assignment", type: "Individual", start: "2026-11-16T00:00", due: "2026-11-30T12:00", weight: "20%", status: "Not Started" },
+            { id: 2, course: "Calculus and Scientific Computing", category: "Personal Assignment", session: "Session 3", name: "Personal Assignment 1", type: "Individual", start: "2026-11-16T00:00", due: "2026-11-30T12:00", weight: "20%", status: "Not Started" },
+            { id: 3, course: "Software Design (LEC)", category: "Personal Assignment", session: "Session 3", name: "Personal Assignment 1", type: "Individual", start: "2026-11-16T00:00", due: "2026-11-30T12:00", weight: "12%", status: "Not Started" },
+            { id: 4, course: "Calculus and Scientific Computing", category: "Team Assignment", session: "Session 4", name: "Team Assignment 1", type: "Group", start: "2026-11-16T00:00", due: "2026-12-07T12:00", weight: "15%", status: "Not Started" },
+            { id: 5, course: "Software Design (LEC)", category: "Team Assignment", session: "Session 7", name: "Team Assignment 1", type: "Group", start: "2026-11-16T00:00", due: "2026-12-07T12:00", weight: "9%", status: "Not Started" },
+            { id: 6, course: "Calculus and Scientific Computing", category: "Team Assignment", session: "Session 5", name: "Team Assignment 2", type: "Group", start: "2026-11-16T00:00", due: "2026-12-14T12:00", weight: "15%", status: "Not Started" },
+            { id: 7, course: "Software Design (LEC)", category: "Team Assignment", session: "Session 8", name: "Team Assignment 2", type: "Group", start: "2026-11-16T00:00", due: "2026-12-14T12:00", weight: "9%", status: "Not Started" },
+            { id: 8, course: "Entrepreneurship", category: "Quiz", session: "Session 6", name: "Quiz 1", type: "Individual", start: "2026-12-14T00:00", due: "2026-12-21T12:00", weight: "15%", status: "Not Started" },
+            { id: 9, course: "Calculus and Scientific Computing", category: "Quiz", session: "Session 6", name: "Quiz 1", type: "Individual", start: "2026-12-14T00:00", due: "2026-12-21T12:00", weight: "15%", status: "Not Started" },
+            { id: 10, course: "Software Design (LEC)", category: "Quiz", session: "Session 9", name: "Quiz 1", type: "Individual", start: "2026-12-14T00:00", due: "2026-12-21T12:00", weight: "9%", status: "Not Started" },
+            { id: 11, course: "Software Design (LAB)", category: "LAB Team Assignment", session: "Session 15", name: "Team Assignment Practicum 1", type: "Group", start: "2026-11-16T00:00", due: "2027-01-11T12:00", weight: "20%", status: "Not Started" },
+            { id: 12, course: "Entrepreneurship", category: "Team Assignment", session: "Session 11", name: "Team Assignment 1", type: "Group", start: "2026-11-16T00:00", due: "2027-01-18T12:00", weight: "15%", status: "Not Started" },
+            { id: 13, course: "Calculus and Scientific Computing", category: "Personal Assignment", session: "Session 11", name: "Personal Assignment 2", type: "Individual", start: "2026-11-16T00:00", due: "2027-01-18T12:00", weight: "20%", status: "Not Started" },
+            { id: 14, course: "Software Design (LEC)", category: "Personal Assignment", session: "Session 16", name: "Personal Assignment 2", type: "Individual", start: "2026-11-16T00:00", due: "2027-01-18T12:00", weight: "12%", status: "Not Started" },
+            { id: 15, course: "Calculus and Scientific Computing", category: "Team Assignment", session: "Session 12", name: "Team Assignment 3", type: "Group", start: "2026-11-16T00:00", due: "2027-01-25T12:00", weight: "15%", status: "Not Started" },
+            { id: 16, course: "Software Design (LAB)", category: "LAB Team Assignment", session: "Session 18", name: "Team Assignment Practicum 2", type: "Group", start: "2026-11-16T00:00", due: "2027-01-25T12:00", weight: "20%", status: "Not Started" },
+            { id: 17, course: "Entrepreneurship", category: "Team Assignment", session: "Session 13", name: "Team Assignment 2", type: "Group", start: "2026-11-16T00:00", due: "2027-02-01T12:00", weight: "15%", status: "Not Started" },
+            { id: 18, course: "Software Design (LEC)", category: "Team Assignment", session: "Session 21", name: "Team Assignment 3", type: "Group", start: "2026-11-16T00:00", due: "2027-02-01T12:00", weight: "9%", status: "Not Started" },
+            { id: 19, course: "Entrepreneurship", category: "Quiz", session: "Session 14", name: "Quiz 2", type: "Individual", start: "2027-02-01T00:00", due: "2027-02-08T12:00", weight: "15%", status: "Not Started" },
+            { id: 20, course: "Calculus and Scientific Computing", category: "Quiz", session: "Session 14", name: "Quiz 2", type: "Individual", start: "2027-02-01T00:00", due: "2027-02-08T12:00", weight: "15%", status: "Not Started" },
+            { id: 21, course: "Software Design (LEC)", category: "Quiz", session: "Session 25", name: "Quiz 2", type: "Individual", start: "2027-02-01T00:00", due: "2027-02-08T12:00", weight: "9%", status: "Not Started" },
+            { id: 22, course: "Software Design (LAB)", category: "LAB Project Team", session: "Session 26", name: "Team Project Practicum", type: "Group", start: "2026-11-16T00:00", due: "2027-02-08T12:00", weight: "20%", status: "Not Started" }
+        ].map(t => ({
+            ...t,
+            status: computeAutoStatus(t.start, t.due)
+        }));
+
+        // Course Order & Accent Styling (Light + Dark mode compatible)
+        const COURSES_ORDER = [
+            { name: "Entrepreneurship", code: "ENTR", color: "bg-indigo-600", badge: "bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/70" },
+            { name: "Calculus and Scientific Computing", code: "CALC", color: "bg-sky-600", badge: "bg-sky-50 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800/70" },
+            { name: "Software Design (LEC)", code: "SWD-LEC", color: "bg-violet-600", badge: "bg-violet-50 dark:bg-violet-950/80 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-800/70" },
+            { name: "Software Design (LAB)", code: "SWD-LAB", color: "bg-emerald-600", badge: "bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/70" }
+        ];
+
+        // Responsive default zoom: slightly more compact on mobile screens
+        let dayWidth = window.innerWidth < 640 ? 22 : 28;
+        const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+        // Helper: Responsive sticky left column width matching Tailwind classes (w-36 sm:w-56 md:w-72)
+        function getLeftColumnWidth() {
+            const w = window.innerWidth;
+            if (w >= 768) return 288; // md:w-72 (18rem)
+            if (w >= 640) return 224; // sm:w-56 (14rem)
+            return 144;               // w-36 (9rem)
+        }
+
+        // Theme Manager (Light / Dark Mode)
+        function initTheme() {
+            const savedTheme = localStorage.getItem('timeline-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            updateThemeIcons();
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('timeline-theme', isDark ? 'dark' : 'light');
+            updateThemeIcons();
+        }
+
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            document.querySelectorAll('.sun-icon').forEach(el => el.classList.toggle('hidden', !isDark));
+            document.querySelectorAll('.moon-icon').forEach(el => el.classList.toggle('hidden', isDark));
+        }
+
+        document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', toggleTheme);
+        });
+
+        // Helper: Get Category Bar Styles (Light + Dark mode)
+        function getCategoryStyle(category, status) {
+            let base = {
+                bg: "bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500",
+                border: "border-blue-600 dark:border-blue-400/50",
+                text: "text-white",
+                pill: "bg-blue-700/60 dark:bg-blue-900/70"
+            };
+
+            if (category.includes("Team") && !category.includes("LAB")) {
+                base = {
+                    bg: "bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-500",
+                    border: "border-purple-600 dark:border-purple-400/50",
+                    text: "text-white",
+                    pill: "bg-purple-700/60 dark:bg-purple-900/70"
+                };
+            } else if (category.includes("Quiz")) {
+                base = {
+                    bg: "bg-amber-500 hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-500",
+                    border: "border-amber-600 dark:border-amber-400/50",
+                    text: "text-white",
+                    pill: "bg-amber-700/60 dark:bg-amber-900/70"
+                };
+            } else if (category.includes("LAB")) {
+                base = {
+                    bg: "bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500",
+                    border: "border-emerald-600 dark:border-emerald-400/50",
+                    text: "text-white",
+                    pill: "bg-emerald-700/60 dark:bg-emerald-900/70"
+                };
+            }
+
+            if (status === "Completed") {
+                base.bg += " opacity-65 saturate-50";
+            }
+
+            return base;
+        }
+
+        // Helper: Format Date nicely in Indonesian
+        function formatDateIndo(dateStr) {
+            const d = new Date(dateStr);
+            const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+            const pad = (n) => n.toString().padStart(2, '0');
+            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        // Helper: Compute Timeline Bounds (Min Start -> Max Due + buffer)
+        function getTimelineBounds() {
+            const minDate = new Date("2026-11-14T00:00:00");
+            const maxDate = new Date("2027-02-12T23:59:59");
+            return { minDate, maxDate };
+        }
+
+        // Helper: Pack overlapping tasks into non-colliding horizontal lanes
+        function assignLanes(courseTasks) {
+            const sorted = [...courseTasks].sort((a, b) => new Date(a.start) - new Date(b.start) || new Date(a.due) - new Date(b.due));
+            const lanes = []; // stores end timestamp of last task in each lane
+
+            sorted.forEach(task => {
+                const startMs = new Date(task.start).getTime();
+                const dueMs = new Date(task.due).getTime();
+                let placed = false;
+
+                for (let i = 0; i < lanes.length; i++) {
+                    if (lanes[i] + (MS_PER_DAY * 0.3) <= startMs) {
+                        task.lane = i;
+                        lanes[i] = dueMs;
+                        placed = true;
+                        break;
+                    }
+                }
+
+                if (!placed) {
+                    task.lane = lanes.length;
+                    lanes.push(dueMs);
+                }
+            });
+
+            return { packedTasks: sorted, laneCount: Math.max(1, lanes.length) };
+        }
+
+        // Update Top Summary Statistics
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.status === "Completed").length;
+            const inProgress = tasks.filter(t => t.status === "In Progress").length;
+            const urgent = tasks.filter(t => {
+                if (t.status === "Completed") return false;
+                const diffDays = (new Date(t.due) - TODAY) / MS_PER_DAY;
+                return diffDays >= 0 && diffDays <= 7;
+            }).length;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-urgent').textContent = urgent;
+            document.getElementById('stat-progress').textContent = inProgress;
+            document.getElementById('stat-completed').textContent = completed;
+        }
+
+        // Render Complete Timeline
+        function renderTimeline() {
+            updateStats();
+
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const filterType = document.getElementById('filter-type').value;
+            const filterStatus = document.getElementById('filter-status').value;
+
+            // Filter tasks
+            const filteredTasks = tasks.filter(t => {
+                const matchSearch = t.name.toLowerCase().includes(searchQuery) ||
+                                    t.session.toLowerCase().includes(searchQuery) ||
+                                    t.course.toLowerCase().includes(searchQuery);
+                const matchType = filterType === "ALL" || t.type === filterType;
+                const matchStatus = filterStatus === "ALL" || t.status === filterStatus;
+                return matchSearch && matchType && matchStatus;
+            });
+
+            const { minDate, maxDate } = getTimelineBounds();
+            const totalDays = Math.ceil((maxDate - minDate) / MS_PER_DAY);
+            const timelineWidth = totalDays * dayWidth;
+
+            // 1. Render Months & Days Header
+            const monthsRow = document.getElementById('timeline-months-row');
+            const daysRow = document.getElementById('timeline-days-row');
+            monthsRow.innerHTML = '';
+            daysRow.innerHTML = '';
+            monthsRow.style.width = `${timelineWidth}px`;
+            daysRow.style.width = `${timelineWidth}px`;
+
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            let currentMonthKey = "";
+            let monthGroups = [];
+
+            for (let i = 0; i < totalDays; i++) {
+                const d = new Date(minDate.getTime() + i * MS_PER_DAY);
+                const mKey = `${d.getFullYear()}-${d.getMonth()}`;
+                if (mKey !== currentMonthKey) {
+                    currentMonthKey = mKey;
+                    monthGroups.push({ label: `${monthNames[d.getMonth()]} ${d.getFullYear()}`, count: 1 });
+                } else {
+                    monthGroups[monthGroups.length - 1].count++;
+                }
+
+                // Day cell
+                const dayCell = document.createElement('div');
+                const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+                const isToday = d.toDateString() === TODAY.toDateString();
+
+                dayCell.style.width = `${dayWidth}px`;
+                dayCell.className = `shrink-0 border-r border-slate-100 dark:border-slate-800/80 flex flex-col items-center justify-center text-[10px] sm:text-[11px] font-medium ${
+                    isToday
+                        ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 font-bold'
+                        : isWeekend
+                            ? 'bg-slate-50/90 dark:bg-slate-800/40 text-slate-400 dark:text-slate-500'
+                            : 'text-slate-600 dark:text-slate-400'
+                }`;
+                dayCell.textContent = d.getDate();
+                daysRow.appendChild(dayCell);
+            }
+
+            monthGroups.forEach(mg => {
+                const mCell = document.createElement('div');
+                mCell.style.width = `${mg.count * dayWidth}px`;
+                mCell.className = "shrink-0 border-r border-slate-200 dark:border-slate-700/80 px-2 sm:px-3 flex items-center text-[11px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate";
+                mCell.textContent = mg.label;
+                monthsRow.appendChild(mCell);
+            });
+
+            // 2. Render Course Rows (Left Sticky Course Info + Right Timeline Track)
+            const bodyContainer = document.getElementById('timeline-body');
+            bodyContainer.innerHTML = '';
+
+            const allCourseNames = [...COURSES_ORDER.map(c => c.name)];
+            tasks.forEach(t => {
+                if (!allCourseNames.includes(t.course)) allCourseNames.push(t.course);
+            });
+
+            allCourseNames.forEach(courseName => {
+                const courseMeta = COURSES_ORDER.find(c => c.name === courseName) || {
+                    name: courseName,
+                    code: "CRS",
+                    color: "bg-slate-600",
+                    badge: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700"
+                };
+
+                const courseAllTasks = tasks.filter(t => t.course === courseName);
+                const courseFilteredTasks = filteredTasks.filter(t => t.course === courseName);
+                const completedCount = courseAllTasks.filter(t => t.status === "Completed").length;
+                const progressPct = courseAllTasks.length ? Math.round((completedCount / courseAllTasks.length) * 100) : 0;
+
+                const { packedTasks, laneCount } = assignLanes(courseFilteredTasks);
+                const laneHeight = window.innerWidth < 640 ? 44 : 46;
+                const rowHeight = Math.max(82, laneCount * laneHeight + 24);
+
+                const rowEl = document.createElement('div');
+                rowEl.className = "flex group hover:bg-slate-50/40 dark:hover:bg-slate-800/20 transition-colors";
+                rowEl.style.minHeight = `${rowHeight}px`;
+
+                // Left Sticky Course Column (Responsive width: w-36 sm:w-56 md:w-72)
+                const leftCol = document.createElement('div');
+                leftCol.className = "sticky left-0 z-10 w-36 sm:w-56 md:w-72 shrink-0 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/90 border-r border-slate-200 dark:border-slate-800 p-2.5 sm:p-4 flex flex-col justify-center transition-colors shadow-[2px_0_6px_-2px_rgba(0,0,0,0.06)] dark:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.4)]";
+                leftCol.innerHTML = `
+                    <div class="flex items-start gap-2 sm:gap-2.5">
+                        <span class="w-1.5 sm:w-2 h-8 sm:h-9 rounded-full ${courseMeta.color} shrink-0 mt-0.5"></span>
+                        <div class="min-w-0 flex-1">
+                            <span class="inline-block px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-md border ${courseMeta.badge} mb-0.5 sm:mb-1">
+                                ${courseMeta.code}
+                            </span>
+                            <h2 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 leading-snug line-clamp-2" title="${courseName}">
+                                ${courseName}
+                            </h2>
+                            <div class="mt-1.5 sm:mt-2 flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">
+                                <span>${completedCount}/${courseAllTasks.length} <span class="hidden sm:inline">selesai</span></span>
+                                <span class="font-semibold text-slate-700 dark:text-slate-300">${progressPct}%</span>
+                            </div>
+                            <div class="w-full h-1 sm:h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-1">
+                                <div class="h-full ${courseMeta.color} rounded-full transition-all duration-300" style="width: ${progressPct}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Right Timeline Track Area
+                const rightTrack = document.createElement('div');
+                rightTrack.className = "relative shrink-0";
+                rightTrack.style.width = `${timelineWidth}px`;
+                rightTrack.style.height = `${rowHeight}px`;
+
+                // Background Vertical Grid Lines
+                const gridBg = document.createElement('div');
+                gridBg.className = "absolute inset-0 flex pointer-events-none";
+                for (let i = 0; i < totalDays; i++) {
+                    const d = new Date(minDate.getTime() + i * MS_PER_DAY);
+                    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+                    const cell = document.createElement('div');
+                    cell.style.width = `${dayWidth}px`;
+                    cell.className = `shrink-0 h-full border-r border-slate-100/90 dark:border-slate-800/60 ${isWeekend ? 'bg-slate-50/60 dark:bg-slate-800/25' : ''}`;
+                    gridBg.appendChild(cell);
+                }
+                rightTrack.appendChild(gridBg);
+
+                // Task Bars
+                packedTasks.forEach(task => {
+                    const startMs = new Date(task.start).getTime();
+                    const dueMs = new Date(task.due).getTime();
+                    const offsetDays = Math.max(0, (startMs - minDate.getTime()) / MS_PER_DAY);
+                    const durationDays = Math.max(1.2, (dueMs - startMs) / MS_PER_DAY);
+
+                    const leftPx = offsetDays * dayWidth;
+                    const widthPx = Math.max(44, durationDays * dayWidth);
+                    const topPx = 12 + task.lane * laneHeight;
+
+                    const style = getCategoryStyle(task.category, task.status);
+                    const statusIcon = task.status === "Completed" ? "✓" : (task.status === "In Progress" ? "⚡" : "");
+
+                    const bar = document.createElement('div');
+                    bar.style.left = `${leftPx}px`;
+                    bar.style.width = `${widthPx}px`;
+                    bar.style.top = `${topPx}px`;
+                    bar.className = `absolute h-8 sm:h-9 rounded-xl ${style.bg} ${style.text} border ${style.border} shadow-sm px-2 sm:px-2.5 flex items-center justify-between gap-1.5 cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md hover:z-20 overflow-hidden`;
+
+                    bar.innerHTML = `
+                        <div class="flex items-center gap-1 sm:gap-1.5 min-w-0">
+                            ${statusIcon ? `<span class="text-[10px] sm:text-xs font-bold shrink-0">${statusIcon}</span>` : ''}
+                            <span class="text-[11px] sm:text-xs font-semibold truncate ${task.status === 'Completed' ? 'line-through' : ''}">
+                                ${task.name}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <span class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-medium rounded-md ${style.pill}">
+                                ${task.session}
+                            </span>
+                            <span class="px-1 sm:px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-md bg-black/20">
+                                ${task.weight}
+                            </span>
+                        </div>
+                    `;
+
+                    // Click to open Edit Modal
+                    bar.addEventListener('click', () => openModal(task));
+
+                    // Hover Tooltip Events (Desktop)
+                    bar.addEventListener('mouseenter', (e) => showTooltip(e, task));
+                    bar.addEventListener('mousemove', (e) => moveTooltip(e));
+                    bar.addEventListener('mouseleave', hideTooltip);
+
+                    rightTrack.appendChild(bar);
+                });
+
+                rowEl.appendChild(leftCol);
+                rowEl.appendChild(rightTrack);
+                bodyContainer.appendChild(rowEl);
+            });
+
+            // 3. Position "Today" Vertical Line (Dynamically aligned to left sticky column width)
+            const todayLine = document.getElementById('today-line');
+            const todayOffsetDays = (TODAY.getTime() - minDate.getTime()) / MS_PER_DAY;
+            if (todayOffsetDays >= 0 && todayOffsetDays <= totalDays) {
+                const leftColumnWidth = getLeftColumnWidth();
+                todayLine.style.display = 'block';
+                todayLine.style.left = `${leftColumnWidth + todayOffsetDays * dayWidth}px`;
+            } else {
+                todayLine.style.display = 'none';
+            }
+        }
+
+        // Tooltip Logic
+        const tooltip = document.getElementById('hover-tooltip');
+        function showTooltip(e, task) {
+            if (window.matchMedia('(pointer: coarse)').matches) return; // Skip hover tooltip on touch screens
+            document.getElementById('tt-name').textContent = `${task.name} (${task.session})`;
+            document.getElementById('tt-course').textContent = task.course;
+            document.getElementById('tt-start').textContent = formatDateIndo(task.start);
+            document.getElementById('tt-due').textContent = formatDateIndo(task.due);
+            document.getElementById('tt-meta').textContent = `${task.weight} • ${task.type}`;
+            document.getElementById('tt-status').textContent = task.status;
+            tooltip.classList.remove('hidden');
+            moveTooltip(e);
+        }
+
+        function moveTooltip(e) {
+            const x = Math.min(window.innerWidth - 280, e.clientX + 14);
+            const y = Math.min(window.innerHeight - 150, e.clientY + 14);
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
+        }
+
+        function hideTooltip() {
+            tooltip.classList.add('hidden');
+        }
+
+        // Modal Logic
+        const modal = document.getElementById('task-modal');
+        const form = document.getElementById('task-form');
+
+        function openModal(task = null) {
+            hideTooltip();
+            if (task) {
+                // Edit Mode
+                document.getElementById('modal-course-badge').textContent = task.course;
+                document.getElementById('modal-title').textContent = `${task.name} (${task.session})`;
+                document.getElementById('form-task-id').value = task.id;
+                document.getElementById('form-course').value = task.course;
+                document.getElementById('form-status').value = task.status;
+                document.getElementById('form-name').value = task.name;
+                document.getElementById('form-session').value = task.session;
+                document.getElementById('form-category').value = task.category;
+                document.getElementById('form-type').value = task.type;
+                document.getElementById('form-weight').value = task.weight;
+                document.getElementById('form-start').value = task.start;
+                document.getElementById('form-due').value = task.due;
+                document.getElementById('btn-delete-task').classList.remove('hidden');
+
+                // Countdown info
+                const diffDays = Math.ceil((new Date(task.due) - TODAY) / MS_PER_DAY);
+                const cdText = diffDays > 0 ? `${diffDays} hari lagi` : (diffDays === 0 ? "Hari ini!" : `Terlewat ${Math.abs(diffDays)} hari`);
+                document.getElementById('modal-countdown-text').textContent = cdText;
+                document.getElementById('modal-countdown-box').style.display = 'flex';
+            } else {
+                // Add Mode
+                document.getElementById('modal-course-badge').textContent = "Tugas Baru";
+                document.getElementById('modal-title').textContent = "Tambah Tugas ke Timeline";
+                document.getElementById('form-task-id').value = "";
+                document.getElementById('form-name').value = "";
+                document.getElementById('form-session').value = "";
+                document.getElementById('form-weight').value = "10%";
+                document.getElementById('form-start').value = "2026-11-24T00:00";
+                document.getElementById('form-due').value = "2026-12-01T12:00";
+                document.getElementById('form-status').value = computeAutoStatus("2026-11-24T00:00", "2026-12-01T12:00");
+                document.getElementById('btn-delete-task').classList.add('hidden');
+                document.getElementById('modal-countdown-box').style.display = 'none';
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Auto-sync status dropdown when Start Date or Due Date changes in the form
+        function syncFormStatusWithDates() {
+            const startVal = document.getElementById('form-start').value;
+            const dueVal = document.getElementById('form-due').value;
+            if (startVal && dueVal) {
+                document.getElementById('form-status').value = computeAutoStatus(startVal, dueVal);
+            }
+        }
+
+        document.getElementById('form-start').addEventListener('change', syncFormStatusWithDates);
+        document.getElementById('form-due').addEventListener('change', syncFormStatusWithDates);
+
+        document.getElementById('close-modal').addEventListener('click', closeModal);
+        document.getElementById('btn-cancel-modal').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Save Task (Create or Update)
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const idVal = document.getElementById('form-task-id').value;
+            const taskData = {
+                course: document.getElementById('form-course').value,
+                status: document.getElementById('form-status').value,
+                name: document.getElementById('form-name').value,
+                session: document.getElementById('form-session').value,
+                category: document.getElementById('form-category').value,
+                type: document.getElementById('form-type').value,
+                weight: document.getElementById('form-weight').value,
+                start: document.getElementById('form-start').value,
+                due: document.getElementById('form-due').value
+            };
+
+            if (idVal) {
+                const idx = tasks.findIndex(t => t.id === Number(idVal));
+                if (idx !== -1) tasks[idx] = { ...tasks[idx], ...taskData };
+            } else {
+                const newId = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+                tasks.push({ id: newId, ...taskData });
+            }
+
+            closeModal();
+            renderTimeline();
+        });
+
+        // Delete Task
+        document.getElementById('btn-delete-task').addEventListener('click', () => {
+            const idVal = Number(document.getElementById('form-task-id').value);
+            tasks = tasks.filter(t => t.id !== idVal);
+            closeModal();
+            renderTimeline();
+        });
+
+        // Toolbar Event Listeners
+        document.getElementById('search-input').addEventListener('input', renderTimeline);
+        document.getElementById('filter-type').addEventListener('change', renderTimeline);
+        document.getElementById('filter-status').addEventListener('change', renderTimeline);
+        document.getElementById('btn-add-task').addEventListener('click', () => openModal(null));
+
+        document.getElementById('zoom-in').addEventListener('click', () => {
+            dayWidth = Math.min(56, dayWidth + 6);
+            renderTimeline();
+        });
+
+        document.getElementById('zoom-out').addEventListener('click', () => {
+            dayWidth = Math.max(14, dayWidth - 6);
+            renderTimeline();
+        });
+
+        function scrollToToday() {
+            const container = document.getElementById('timeline-scroll-container');
+            const { minDate } = getTimelineBounds();
+            const offsetDays = (TODAY.getTime() - minDate.getTime()) / MS_PER_DAY;
+            const targetX = Math.max(0, (offsetDays * dayWidth) - 80);
+            container.scrollTo({ left: targetX, behavior: 'smooth' });
+        }
+
+        document.getElementById('btn-scroll-today').addEventListener('click', scrollToToday);
+
+        // Re-align today marker & layout smoothly when screen resizes or rotates
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(renderTimeline, 100);
+        });
+
+        // Initial Theme & Render on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            renderTimeline();
+            setTimeout(scrollToToday, 150);
+        });
+    </script>
+</body>
+</html>
