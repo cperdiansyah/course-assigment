@@ -61,7 +61,7 @@ export function DataModal({
   };
 
   return (
-    <ModalDialog open={open} onClose={onClose} ariaLabelledBy={titleId} maxWidthClass="max-w-md">
+    <ModalDialog open={open} onClose={onClose} ariaLabelledBy={titleId} maxWidthClass="sm:max-w-md">
       <div className="px-4 sm:px-5 py-3.5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/70 dark:bg-zinc-900/60">
         <div>
           <h1 id={titleId} className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-zinc-100">

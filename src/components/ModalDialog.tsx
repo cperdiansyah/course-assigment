@@ -13,7 +13,7 @@ export function ModalDialog({
   onClose,
   ariaLabelledBy,
   children,
-  maxWidthClass = 'max-w-lg',
+  maxWidthClass = 'sm:max-w-lg',
 }: ModalDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -74,8 +74,11 @@ export function ModalDialog({
       ref={dialogRef}
       aria-labelledby={ariaLabelledBy}
       {...({ closedby: 'any' } as Record<string, string>)}
-      className={`m-auto w-[calc(100%-1.5rem)] ${maxWidthClass} rounded-xl bg-white dark:bg-[#121417] text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800 shadow-2xl p-0 overflow-hidden`}
+      className={`mt-auto mb-0 mx-0 w-full max-w-full rounded-t-2xl rounded-b-none pb-[env(safe-area-inset-bottom)] sm:m-auto sm:w-[calc(100%-2rem)] ${maxWidthClass} sm:rounded-xl sm:pb-0 bg-white dark:bg-[#121417] text-zinc-900 dark:text-zinc-100 border-t sm:border border-zinc-200 dark:border-zinc-800 shadow-2xl p-0 overflow-hidden`}
     >
+      <div className="sm:hidden flex justify-center pt-2 pb-0.5 bg-zinc-50/70 dark:bg-zinc-900/60" aria-hidden="true">
+        <span className="w-9 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+      </div>
       {open ? children : null}
     </dialog>
   );
