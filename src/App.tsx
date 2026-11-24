@@ -18,6 +18,7 @@ export default function App() {
   const { isDark, toggleTheme } = useTheme();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterCourse, setFilterCourse] = useState<string>('ALL');
   const [filterType, setFilterType] = useState<'ALL' | TaskType>('ALL');
   const [filterStatus, setFilterStatus] = useState<'ALL' | TaskStatus>('ALL');
   const [viewMode, setViewMode] = useState<ViewMode>(() =>
@@ -61,11 +62,24 @@ export default function App() {
         t.name.toLowerCase().includes(q) ||
         t.session.toLowerCase().includes(q) ||
         courseName.toLowerCase().includes(q);
+      const matchCourse = filterCourse === 'ALL' || t.courseId === filterCourse;
       const matchType = filterType === 'ALL' || t.type === filterType;
       const matchStatus = filterStatus === 'ALL' || t.status === filterStatus;
-      return matchSearch && matchType && matchStatus;
+      return matchSearch && matchCourse && matchType && matchStatus;
     });
-  }, [tasks, searchQuery, filterType, filterStatus, courseNameMap]);
+  }, [tasks, searchQuery, filterCourse, filterType, filterStatus, courseNameMap]);
+
+  const visibleCourses = useMemo(
+    () => (filterCourse === 'ALL' ? courses : courses.filter((c) => c.id === filterCourse)),
+    [courses, filterCourse],
+  );
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setFilterCourse('ALL');
+    setFilterType('ALL');
+    setFilterStatus('ALL');
+  };
 
   const handleOpenNewTask = () => {
     setEditingTask(null);
@@ -149,15 +163,20 @@ export default function App() {
     <div className={viewMode === 'timeline' ? 'h-dvh flex flex-col overflow-hidden' : 'min-h-dvh flex flex-col'}>
       <Header
         today={today}
+        courses={courses}
         stats={stats}
+        filteredCount={filteredTasks.length}
         isDark={isDark}
         onToggleTheme={toggleTheme}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        filterCourse={filterCourse}
+        onFilterCourseChange={setFilterCourse}
         filterType={filterType}
         onFilterTypeChange={setFilterType}
         filterStatus={filterStatus}
         onFilterStatusChange={setFilterStatus}
+        onResetFilters={handleResetFilters}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         onZoomIn={() => setDayWidth((w) => Math.min(56, w + 6))}
@@ -171,7 +190,7 @@ export default function App() {
       <main className="flex-1 flex flex-col overflow-hidden p-2.5 sm:p-4">
         {viewMode === 'timeline' ? (
           <TimelineView
-            courses={courses}
+            courses={visibleCourses}
             allTasks={tasks}
             filteredTasks={filteredTasks}
             today={today}
