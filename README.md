@@ -11,12 +11,16 @@ Aplikasi web untuk melacak jadwal, progres, dan tenggat waktu tugas kuliah denga
   - **Timeline:** Gantt chart horizontal dengan rentang tanggal dinamis, kolom mata kuliah sticky, penanda hari ini real-time, zoom (`+/-`), dan tooltip detail saat hover.
   - **Agenda:** Daftar tugas yang dikelompokkan berdasarkan urgensi (*Mendesak & Terlewat*, *Berjalan & Mendatang*, *Selesai*) dengan quick-toggle status.
   - **Perjalanan:** Timeline vertikal kronologis lengkap dengan penanda posisi hari ini dan ringkasan progres milestone.
-- **Manajemen Tugas & Mata Kuliah**
-  - Tambah, edit, dan hapus tugas (termasuk bobot nilai, sesi, kategori, tipe Individual/Group, dan catatan).
-  - Status pengerjaan otomatis mengikuti tanggal mulai & deadline terhadap hari ini, dengan opsi override manual.
+- **Manajemen Tugas, Read Mode & Kalender**
+  - Klik tugas untuk membuka **Read Mode** (ringkasan detail, countdown, dan tombol **Edit** / **Hapus**).
+  - **Add to Calendar:** tambahkan deadline langsung ke **Google Calendar** atau unduh file **`.ics`** (Apple Calendar / Outlook).
+  - Tambah dan ubah tugas (bobot nilai, sesi, kategori, tipe Individual/Group, dan catatan) dengan status otomatis atau override manual.
   - Kelola mata kuliah custom (nama, kode, dan warna).
-- **Filter & Pencarian Cepat**
-  - Pencarian real-time berdasarkan nama tugas, mata kuliah, atau sesi, serta filter tipe dan status.
+- **Filter Cepat & Penanda Deadline**
+  - Filter berdasarkan **Mata Kuliah**, **Tipe**, dan **Status**, lengkap dengan tombol **Reset**.
+  - Penanda **Deadline `≤ 7 hari`** yang bisa diklik untuk langsung memfilter tugas mendesak.
+- **Mobile-First UX**
+  - Bottom navigation bar di layar mobile, serta modal berbentuk bottom sheet dengan animasi halus.
 - **Penyimpanan Lokal & Backup (CSV / JSON)**
   - Data awal dimuat dari seeder [`src/data/seed-assignments.csv`](src/data/seed-assignments.csv) dan semua perubahan tersimpan otomatis di `localStorage` browser.
   - Mendukung **Export CSV** (bisa diedit di Excel/Google Sheets), **Download Example CSV**, dan **Export JSON** melalui tombol **Data** (ikon database di kanan atas).
@@ -70,6 +74,11 @@ npm run build
 npm run preview
 ```
 
-## Deployment
+## Deployment & Analytics (Opsional)
 
 Setiap push ke branch `main` akan otomatis di-build dan di-deploy ke GitHub Pages melalui workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+Untuk mengaktifkan analytics ringan tanpa cookie via [GoatCounter](https://www.goatcounter.com/):
+1. Buat akun gratis di GoatCounter dan dapatkan site code kamu.
+2. Di repo GitHub, buka **Settings → Secrets and variables → Actions → Variables**.
+3. Tambahkan repository variable `VITE_GOATCOUNTER_CODE` berisi site code tersebut.
