@@ -9,7 +9,6 @@ import {
   Plus,
   RotateCcw,
   Route,
-  Search,
   Sun,
 } from 'lucide-react';
 import { Course, TaskStatus, TaskType, ViewMode } from '../types';
@@ -27,8 +26,6 @@ interface HeaderProps {
   filteredCount: number;
   isDark: boolean;
   onToggleTheme: () => void;
-  searchQuery: string;
-  onSearchChange: (q: string) => void;
   filterCourse: string;
   onFilterCourseChange: (courseId: string) => void;
   filterType: 'ALL' | TaskType;
@@ -54,8 +51,6 @@ export function Header({
   filteredCount,
   isDark,
   onToggleTheme,
-  searchQuery,
-  onSearchChange,
   filterCourse,
   onFilterCourseChange,
   filterType,
@@ -75,7 +70,6 @@ export function Header({
 }: HeaderProps) {
   const hasActiveFilter =
     hasExtraFilter ||
-    searchQuery.trim() !== '' ||
     filterCourse !== 'ALL' ||
     filterType !== 'ALL' ||
     filterStatus !== 'ALL';
@@ -202,20 +196,8 @@ export function Header({
       {/* Filter & View Controls Bar */}
       <div className="bg-zinc-50/80 dark:bg-zinc-900/50 border-t border-zinc-200/80 dark:border-zinc-800">
         <div className="max-w-full mx-auto px-3 sm:px-6 py-2 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-          {/* Search & Filters */}
+          {/* Filters */}
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
-            <div className="relative w-full sm:w-48">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-                placeholder="Cari tugas atau sesi..."
-                aria-label="Cari tugas atau sesi"
-                className="w-full h-8 pl-8 pr-3 text-base sm:text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors"
-              />
-              <Search className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 absolute left-2.5 top-2.5 pointer-events-none" />
-            </div>
-
             <div className="grid grid-cols-3 sm:flex items-center gap-1.5 w-full sm:w-auto">
               <select
                 value={filterCourse}

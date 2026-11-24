@@ -19,7 +19,6 @@ export default function App() {
   const [{ courses, tasks }, setAppState] = useState(() => loadAppState(today));
   const { isDark, toggleTheme } = useTheme();
 
-  const [searchQuery, setSearchQuery] = useState('');
   const [filterCourse, setFilterCourse] = useState<string>('ALL');
   const [filterType, setFilterType] = useState<'ALL' | TaskType>('ALL');
   const [filterStatus, setFilterStatus] = useState<'ALL' | TaskStatus>('ALL');
@@ -54,26 +53,17 @@ export default function App() {
     return { total, completed, inProgress, urgent };
   }, [tasks, today]);
 
-  const courseNameMap = useMemo(() => new Map(courses.map((c) => [c.id, c.name])), [courses]);
-
   const filteredTasks = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
     return tasks.filter((t) => {
-      const courseName = courseNameMap.get(t.courseId) ?? '';
-      const matchSearch =
-        !q ||
-        t.name.toLowerCase().includes(q) ||
-        t.session.toLowerCase().includes(q) ||
-        courseName.toLowerCase().includes(q);
       const matchCourse = filterCourse === 'ALL' || t.courseId === filterCourse;
       const matchType = filterType === 'ALL' || t.type === filterType;
       const matchStatus = filterStatus === 'ALL' || t.status === filterStatus;
       const matchUrgent =
         !onlyUrgent ||
         (t.status !== 'Completed' && (new Date(t.due).getTime() - today.getTime()) / MS_PER_DAY <= 7);
-      return matchSearch && matchCourse && matchType && matchStatus && matchUrgent;
+      return matchCourse && matchType && matchStatus && matchUrgent;
     });
-  }, [tasks, searchQuery, filterCourse, filterType, filterStatus, onlyUrgent, today, courseNameMap]);
+  }, [tasks, filterCourse, filterType, filterStatus, onlyUrgent, today]);
 
   const visibleCourses = useMemo(
     () => (filterCourse === 'ALL' ? courses : courses.filter((c) => c.id === filterCourse)),
@@ -81,7 +71,6 @@ export default function App() {
   );
 
   const handleResetFilters = () => {
-    setSearchQuery('');
     setFilterCourse('ALL');
     setFilterType('ALL');
     setFilterStatus('ALL');
@@ -175,8 +164,6 @@ export default function App() {
         filteredCount={filteredTasks.length}
         isDark={isDark}
         onToggleTheme={toggleTheme}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
         filterCourse={filterCourse}
         onFilterCourseChange={setFilterCourse}
         filterType={filterType}
