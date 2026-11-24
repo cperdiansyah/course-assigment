@@ -4,6 +4,7 @@ import { CourseModal } from './components/CourseModal';
 import { DataModal, ImportMode } from './components/DataModal';
 import { Header } from './components/Header';
 import { JourneyView } from './components/JourneyView';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { TaskModal } from './components/TaskModal';
 import { TimelineView } from './components/TimelineView';
 import { UrgentStrip } from './components/UrgentStrip';
@@ -194,7 +195,11 @@ export default function App() {
         onOpenData={() => setDataModalOpen(true)}
       />
 
-      <main className="flex-1 flex flex-col overflow-hidden p-2.5 sm:p-4">
+      <main
+        className={`flex-1 flex flex-col overflow-hidden p-2.5 sm:p-4 ${
+          viewMode === 'timeline' ? 'pb-[4.25rem] sm:pb-4' : 'pb-20 sm:pb-4'
+        }`}
+      >
         <UrgentStrip
           urgentCount={stats.urgent}
           active={onlyUrgent}
@@ -230,6 +235,8 @@ export default function App() {
           />
         )}
       </main>
+
+      <MobileBottomNav viewMode={viewMode} onViewModeChange={setViewMode} />
 
       <TaskModal
         open={taskModalOpen}

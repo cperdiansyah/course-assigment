@@ -280,13 +280,13 @@ export function Header({
             )}
           </div>
 
-          {/* Mobile/Tablet View Switcher & Timeline Controls */}
-          <div className="flex flex-wrap items-center justify-between md:justify-end gap-1.5 sm:gap-2 shrink-0">
-            <div
-              className="flex lg:hidden items-center bg-white dark:bg-zinc-900 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800"
-              role="group"
-              aria-label="Mode Tampilan"
-            >
+          {/* Tablet View Switcher & Timeline Controls */}
+          <div className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2 shrink-0">
+              <div
+                className="hidden sm:flex lg:hidden items-center bg-white dark:bg-zinc-900 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800"
+                role="group"
+                aria-label="Mode Tampilan"
+              >
               <button
                 type="button"
                 onClick={() => onViewModeChange('timeline')}
@@ -329,7 +329,7 @@ export function Header({
             </div>
 
             {viewMode === 'timeline' && (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center justify-between w-full sm:w-auto gap-1.5">
                 <div className="flex items-center bg-white dark:bg-zinc-900 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800">
                   <button
                     type="button"
