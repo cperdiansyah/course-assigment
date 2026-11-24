@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 interface ModalDialogProps {
   open: boolean;
@@ -16,38 +16,74 @@ export function ModalDialog({
   maxWidthClass = 'sm:max-w-lg',
 }: ModalDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const isClosingRef = useRef(false);
   const [rendered, setRendered] = useState(open);
 
-  useEffect(() => {
-    if (open) {
-      setRendered(true);
-    }
-  }, [open]);
-
-  useEffect(() => {
+  const closeWithAnimation = useCallback(async () => {
     const dialog = dialogRef.current;
-    if (!dialog) return;
+    if (!dialog || !dialog.open || isClosingRef.current) return;
 
-    if (open && !dialog.open) {
-      dialog.showModal();
-    } else if (!open && dialog.open) {
+    isClosingRef.current = true;
+    dialog.setAttribute('data-closing', '');
+    // Flush style so the browser starts the exit transition before querying getAnimations()
+    getComputedStyle(dialog).transform;
+
+    const animations = dialog.getAnimations({ subtree: true });
+    if (animations.length > 0) {
+      await Promise.race([
+        Promise.allSettled(animations.map((a) => a.finished)),
+        new Promise((r) => window.setTimeout(r, 450)),
+      ]);
+    } else {
+      await new Promise((r) => window.setTimeout(r, 300));
+    }
+
+    dialog.removeAttribute('data-closing');
+    if (dialog.open) {
       dialog.close();
     }
-
-    if (!open && rendered) {
-      const timer = window.setTimeout(() => setRendered(false), 260);
-      return () => window.clearTimeout(timer);
-    }
-  }, [open, rendered]);
+    isClosingRef.current = false;
+    setRendered(false);
+  }, []);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
+
+    if (open) {
+      isClosingRef.current = false;
+      dialog.removeAttribute('data-closing');
+      setRendered(true);
+      if (!dialog.open) {
+        dialog.showModal();
+      }
+    } else if (dialog.open) {
+      void closeWithAnimation();
+    } else {
+      setRendered(false);
+    }
+  }, [open, closeWithAnimation]);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const handleCancel = (e: Event) => {
+      e.preventDefault();
+      void closeWithAnimation().then(() => {
+        onClose();
+      });
+    };
 
     const handleClose = () => {
       dialog.returnValue = '';
-      onClose();
+      if (!isClosingRef.current) {
+        setRendered(false);
+        onClose();
+      }
     };
+
+    dialog.addEventListener('cancel', handleCancel);
     dialog.addEventListener('close', handleClose);
 
     // Fallback light-dismiss for browsers without HTMLDialogElement.prototype.closedBy
@@ -63,7 +99,9 @@ export function ModalDialog({
       };
       const onPointerUp = (e: PointerEvent) => {
         if (pressedOutside && isOutside(e)) {
-          dialog.close();
+          void closeWithAnimation().then(() => {
+            onClose();
+          });
         }
         pressedOutside = false;
       };
@@ -76,10 +114,11 @@ export function ModalDialog({
     }
 
     return () => {
+      dialog.removeEventListener('cancel', handleCancel);
       dialog.removeEventListener('close', handleClose);
       cleanupFallback?.();
     };
-  }, [onClose]);
+  }, [onClose, closeWithAnimation]);
 
   return (
     <dialog
