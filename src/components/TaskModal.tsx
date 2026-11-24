@@ -324,10 +324,10 @@ export function TaskModal({
           </div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col max-h-[78dvh] sm:max-h-[82dvh]">
-          <div className="p-4 sm:p-5 space-y-3 sm:space-y-3.5 overflow-y-auto flex-1">
+        <form onSubmit={handleSubmit} className="flex flex-col max-h-[68dvh] sm:max-h-[82dvh]">
+          <div className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3.5 overflow-y-auto flex-1">
             {/* Primary Task Identity */}
-            <div className="space-y-3">
+            <div className="space-y-2.5 sm:space-y-3">
               <div className="min-w-0">
                 <label className="block text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">
                   Nama Tugas
@@ -339,11 +339,11 @@ export function TaskModal({
                   placeholder="Contoh: Personal Assignment 1"
                   required
                   autoFocus
-                  className="w-full min-w-0 h-10 sm:h-9 px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
+                  className="w-full min-w-0 h-9 px-2.5 sm:px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 <div className="min-w-0">
                   <label className="block text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">
                     Mata Kuliah
@@ -352,7 +352,7 @@ export function TaskModal({
                     value={courseId}
                     onChange={(e) => setCourseId(e.target.value)}
                     required
-                    className="w-full min-w-0 h-10 sm:h-9 px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
+                    className="w-full min-w-0 h-9 px-2.5 sm:px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
                   >
                     {courses.map((c) => (
                       <option key={c.id} value={c.id}>
@@ -386,7 +386,7 @@ export function TaskModal({
                       setStatus(e.target.value as TaskStatus);
                       setManualStatus(true);
                     }}
-                    className="w-full min-w-0 h-10 sm:h-9 px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 font-medium text-zinc-900 dark:text-zinc-100 transition-colors"
+                    className="w-full min-w-0 h-9 px-2.5 sm:px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 font-medium text-zinc-900 dark:text-zinc-100 transition-colors"
                   >
                     <option value="Not Started">Not Started</option>
                     <option value="In Progress">In Progress</option>
@@ -395,7 +395,7 @@ export function TaskModal({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                 <div className="min-w-0">
                   <label className="block text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">
                     Sesi
@@ -406,7 +406,7 @@ export function TaskModal({
                     onChange={(e) => setSession(e.target.value)}
                     placeholder="Session 3"
                     required
-                    className="w-full min-w-0 h-10 sm:h-9 px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
+                    className="w-full min-w-0 h-9 px-2.5 sm:px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
                   />
                 </div>
                 <div className="min-w-0">
@@ -419,12 +419,12 @@ export function TaskModal({
                     onChange={(e) => setWeight(e.target.value)}
                     placeholder="20%"
                     required
-                    className="w-full min-w-0 h-10 sm:h-9 px-3 text-base sm:text-sm font-mono-num border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
+                    className="w-full min-w-0 h-9 px-2.5 sm:px-3 text-base sm:text-sm font-mono-num border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                 <div className="min-w-0">
                   <label className="block text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">
                     Kategori
@@ -432,7 +432,7 @@ export function TaskModal({
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as TaskCategory)}
-                    className="w-full min-w-0 h-10 sm:h-9 px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
+                    className="w-full min-w-0 h-9 px-2.5 sm:px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
                   >
                     {CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -448,7 +448,7 @@ export function TaskModal({
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value as TaskType)}
-                    className="w-full min-w-0 h-10 sm:h-9 px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
+                    className="w-full min-w-0 h-9 px-2.5 sm:px-3 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
                   >
                     <option value="Individual">Individual</option>
                     <option value="Group">Group</option>
@@ -458,7 +458,7 @@ export function TaskModal({
             </div>
 
             {/* Schedule Section */}
-            <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800/80 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="pt-2.5 border-t border-zinc-100 dark:border-zinc-800/80 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
               <div className="min-w-0">
                 <label className="block text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">
                   Mulai
@@ -468,7 +468,7 @@ export function TaskModal({
                   value={start}
                   onChange={(e) => handleStartChange(e.target.value)}
                   required
-                  className="w-full min-w-0 h-10 sm:h-9 px-3 text-base sm:text-sm tabular-nums border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
+                  className="w-full min-w-0 h-9 px-2.5 sm:px-3 text-base sm:text-sm tabular-nums border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
                 />
               </div>
               <div className="min-w-0">
@@ -480,7 +480,7 @@ export function TaskModal({
                   value={due}
                   onChange={(e) => handleDueChange(e.target.value)}
                   required
-                  className="w-full min-w-0 h-10 sm:h-9 px-3 text-base sm:text-sm tabular-nums border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
+                  className="w-full min-w-0 h-9 px-2.5 sm:px-3 text-base sm:text-sm tabular-nums border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-colors"
                 />
               </div>
             </div>
@@ -495,23 +495,23 @@ export function TaskModal({
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Link submission, anggota kelompok, atau detail penting..."
-                className="w-full px-3 py-2 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 resize-none transition-colors"
+                className="w-full px-2.5 sm:px-3 py-1.5 text-base sm:text-sm border border-zinc-200 dark:border-zinc-700/80 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/70 focus:bg-white dark:focus:bg-zinc-900 focus:outline-none focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 resize-none transition-colors"
               />
             </div>
           </div>
 
           {/* Sticky Mobile-Friendly Action Footer */}
-          <div className="px-4 sm:px-5 py-3 border-t border-zinc-100 dark:border-zinc-800 bg-white dark:bg-[#121417] flex items-center justify-end gap-2 shrink-0">
+          <div className="px-3.5 sm:px-5 py-2.5 sm:py-3 border-t border-zinc-100 dark:border-zinc-800 bg-white dark:bg-[#121417] flex items-center justify-end gap-2 shrink-0">
             <button
               type="button"
               onClick={() => (task ? setMode('read') : onClose())}
-              className="h-10 sm:h-8 px-4 text-xs font-medium text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg transition-colors cursor-pointer flex-1 sm:flex-initial"
+              className="h-9 sm:h-8 px-4 text-xs font-medium text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg transition-colors cursor-pointer flex-1 sm:flex-initial"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="h-10 sm:h-8 px-5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg transition-colors active:scale-[0.97] cursor-pointer flex-1 sm:flex-initial"
+              className="h-9 sm:h-8 px-5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg transition-colors active:scale-[0.97] cursor-pointer flex-1 sm:flex-initial"
             >
               Simpan
             </button>

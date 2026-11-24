@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 
 interface ModalDialogProps {
   open: boolean;
@@ -16,6 +16,13 @@ export function ModalDialog({
   maxWidthClass = 'sm:max-w-lg',
 }: ModalDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [rendered, setRendered] = useState(open);
+
+  useEffect(() => {
+    if (open) {
+      setRendered(true);
+    }
+  }, [open]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -26,7 +33,12 @@ export function ModalDialog({
     } else if (!open && dialog.open) {
       dialog.close();
     }
-  }, [open]);
+
+    if (!open && rendered) {
+      const timer = window.setTimeout(() => setRendered(false), 260);
+      return () => window.clearTimeout(timer);
+    }
+  }, [open, rendered]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -79,7 +91,7 @@ export function ModalDialog({
       <div className="sm:hidden flex justify-center pt-2 pb-0.5 bg-zinc-50/70 dark:bg-zinc-900/60" aria-hidden="true">
         <span className="w-9 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
       </div>
-      {open ? children : null}
+      {rendered ? children : null}
     </dialog>
   );
 }
