@@ -6,6 +6,7 @@ import { Header } from './components/Header';
 import { JourneyView } from './components/JourneyView';
 import { TaskModal } from './components/TaskModal';
 import { TimelineView } from './components/TimelineView';
+import { UrgentStrip } from './components/UrgentStrip';
 import { DEFAULT_COURSES, getSeedTasks } from './data/seed';
 import { useTheme } from './hooks/useTheme';
 import { Course, Task, TaskStatus, TaskType, ViewMode } from './types';
@@ -21,6 +22,7 @@ export default function App() {
   const [filterCourse, setFilterCourse] = useState<string>('ALL');
   const [filterType, setFilterType] = useState<'ALL' | TaskType>('ALL');
   const [filterStatus, setFilterStatus] = useState<'ALL' | TaskStatus>('ALL');
+  const [onlyUrgent, setOnlyUrgent] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>(() =>
     typeof window !== 'undefined' && window.innerWidth < 640 ? 'agenda' : 'timeline',
   );
@@ -46,7 +48,7 @@ export default function App() {
     const urgent = tasks.filter((t) => {
       if (t.status === 'Completed') return false;
       const diffDays = (new Date(t.due).getTime() - today.getTime()) / MS_PER_DAY;
-      return diffDays >= 0 && diffDays <= 7;
+      return diffDays <= 7;
     }).length;
     return { total, completed, inProgress, urgent };
   }, [tasks, today]);
@@ -65,9 +67,12 @@ export default function App() {
       const matchCourse = filterCourse === 'ALL' || t.courseId === filterCourse;
       const matchType = filterType === 'ALL' || t.type === filterType;
       const matchStatus = filterStatus === 'ALL' || t.status === filterStatus;
-      return matchSearch && matchCourse && matchType && matchStatus;
+      const matchUrgent =
+        !onlyUrgent ||
+        (t.status !== 'Completed' && (new Date(t.due).getTime() - today.getTime()) / MS_PER_DAY <= 7);
+      return matchSearch && matchCourse && matchType && matchStatus && matchUrgent;
     });
-  }, [tasks, searchQuery, filterCourse, filterType, filterStatus, courseNameMap]);
+  }, [tasks, searchQuery, filterCourse, filterType, filterStatus, onlyUrgent, today, courseNameMap]);
 
   const visibleCourses = useMemo(
     () => (filterCourse === 'ALL' ? courses : courses.filter((c) => c.id === filterCourse)),
@@ -79,6 +84,7 @@ export default function App() {
     setFilterCourse('ALL');
     setFilterType('ALL');
     setFilterStatus('ALL');
+    setOnlyUrgent(false);
   };
 
   const handleOpenNewTask = () => {
@@ -176,6 +182,7 @@ export default function App() {
         onFilterTypeChange={setFilterType}
         filterStatus={filterStatus}
         onFilterStatusChange={setFilterStatus}
+        hasExtraFilter={onlyUrgent}
         onResetFilters={handleResetFilters}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
@@ -188,6 +195,12 @@ export default function App() {
       />
 
       <main className="flex-1 flex flex-col overflow-hidden p-2.5 sm:p-4">
+        <UrgentStrip
+          urgentCount={stats.urgent}
+          active={onlyUrgent}
+          onToggle={() => setOnlyUrgent((v) => !v)}
+        />
+
         {viewMode === 'timeline' ? (
           <TimelineView
             courses={visibleCourses}

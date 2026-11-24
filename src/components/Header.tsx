@@ -35,6 +35,7 @@ interface HeaderProps {
   onFilterTypeChange: (t: 'ALL' | TaskType) => void;
   filterStatus: 'ALL' | TaskStatus;
   onFilterStatusChange: (s: 'ALL' | TaskStatus) => void;
+  hasExtraFilter?: boolean;
   onResetFilters: () => void;
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
@@ -61,6 +62,7 @@ export function Header({
   onFilterTypeChange,
   filterStatus,
   onFilterStatusChange,
+  hasExtraFilter = false,
   onResetFilters,
   viewMode,
   onViewModeChange,
@@ -72,6 +74,7 @@ export function Header({
   onOpenData,
 }: HeaderProps) {
   const hasActiveFilter =
+    hasExtraFilter ||
     searchQuery.trim() !== '' ||
     filterCourse !== 'ALL' ||
     filterType !== 'ALL' ||
@@ -99,22 +102,7 @@ export function Header({
                 <span>{stats.total} tugas</span>
                 <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">·</span>
                 <span className="text-zinc-700 dark:text-zinc-300 font-medium">{stats.inProgress} berjalan</span>
-                {stats.urgent > 0 && (
-                  <>
-                    <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">·</span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        onFilterStatusChange(filterStatus === 'In Progress' ? 'ALL' : 'In Progress')
-                      }
-                      className="text-amber-700 dark:text-amber-400 font-semibold hover:underline cursor-pointer"
-                      title="Filter tugas yang sedang berjalan"
-                    >
-                      {stats.urgent} &le;7h
-                    </button>
-                  </>
-                )}
-                <span className="hidden md:inline">
+                <span className="hidden sm:inline">
                   <span className="mx-1.5 text-zinc-300 dark:text-zinc-700">·</span>
                   {stats.completed} selesai
                 </span>
